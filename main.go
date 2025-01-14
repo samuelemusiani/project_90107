@@ -19,5 +19,9 @@ func main() {
 	conf := config.Get()
 	slog.With("Config", conf).Debug("Config loaded")
 
-	handler.InitAndServe(conf)
+	err = handler.InitAndServe(conf)
+	if err != nil {
+		slog.With("Error", err).Error("Error initializing server")
+		os.Exit(1)
+	}
 }

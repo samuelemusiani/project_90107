@@ -1,18 +1,47 @@
 package handler
 
 import (
+	"embed"
 	"fmt"
+	"net/http"
+	"strings"
 
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+
 	"samuelemusiani/project_90107/config"
 )
 
-func InitAndServe(conf *config.Config) {
-	r := gin.Default()
-	api := r.Group("/api")
+//go:embed dist
+var frontend embed.FS
+
+func InitAndServe(conf *config.Config) error {
+	router := gin.Default()
+
+	// middleware for static files (frontend)
+	router.Use(static.Serve("/", static.EmbedFolder(frontend, "dist")))
+
+	api := router.Group("/api")
 	api.GET("/", root)
 
-	r.Run(fmt.Sprintf(":%d", conf.Server.Port))
+	// Read index.html into memory
+	index, err := frontend.ReadFile("dist/index.html")
+	if err != nil {
+		return err
+	}
+
+	// If no route match is probably a vue route. So we return the index.html
+	// and the vue-router takes from here
+	router.NoRoute(func(c *gin.Context) {
+		if strings.HasPrefix(c.Request.URL.String(), "/api") {
+			c.JSON(http.StatusNotFound, "")
+			return
+		}
+		c.Data(http.StatusOK, "text/html", index)
+	})
+
+	router.Run(fmt.Sprintf(":%d", conf.Server.Port))
+	return nil
 }
 
 func root(c *gin.Context) {
