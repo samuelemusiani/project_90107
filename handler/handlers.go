@@ -9,7 +9,8 @@ import (
 
 func InitAndServe(conf *config.Config) {
 	r := gin.Default()
-	r.GET("/", root)
+	api := r.Group("/api")
+	api.GET("/", root)
 
 	r.Run(fmt.Sprintf(":%d", conf.Server.Port))
 }
