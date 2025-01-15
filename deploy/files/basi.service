@@ -1,0 +1,15 @@
+[Unit]
+Description=Basi
+Documentation=https://github.com/samuelemusiani/project_90107
+
+After=network.target
+
+[Service]
+User=debian
+Group=debian
+ExecStart=/opt/basi/project_90107/basi
+WorkingDirectory=/opt/basi/project_90107
+Environment=GIN_MODE=release
+
+[Install]
+WantedBy=multi-user.target

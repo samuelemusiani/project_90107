@@ -1,0 +1,66 @@
+- name: Read token
+  ansible.builtin.set_fact:
+    token: "{{ lookup('ansible.builtin.file', '.token') }}"
+
+- name: Install packages
+  become: true
+  ansible.builtin.package:
+    name: 
+      - git
+      - nodejs
+      - npm
+    state: latest
+
+- name: Create working dir
+  become: true
+  ansible.builtin.file:
+    path: /opt/basi/{{ item}}
+    state: directory
+    owner: debian
+    group: debian
+  with_items:
+    - ""
+    - just
+
+- name: Install just
+  ansible.builtin.unarchive:
+    src: https://github.com/casey/just/releases/download/1.38.0/just-1.38.0-x86_64-unknown-linux-musl.tar.gz
+    dest: /opt/basi/just
+    remote_src: true
+
+- name: Install golang
+  ansible.builtin.unarchive:
+    src: https://go.dev/dl/go1.23.4.linux-amd64.tar.gz
+    dest: /opt/basi
+    remote_src: true
+
+- name: Clone repository
+  ansible.builtin.git:
+    repo: "https://{{ token }}@github.com/samuelemusiani/project_90107.git"
+    dest: /opt/basi/project_90107
+    version: main
+    force: true
+
+- name: Build the application
+  ansible.builtin.command:
+    cmd: /opt/basi/just/just build
+    chdir: /opt/basi/project_90107
+  environment:
+    PATH: "/opt/basi/go/bin:{{ ansible_env.PATH }}"
+
+- name: Copy stystemd service
+  become: true
+  ansible.builtin.copy:
+    src: files/basi.service
+    dest: /etc/systemd/system/basi.service
+
+- name: Reload systemd daemon
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Restart the service
+  become: true
+  ansible.builtin.systemd:
+    name: basi
+    state: restarted

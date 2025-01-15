@@ -1,0 +1,7 @@
+all:
+  hosts:
+    basi:
+      ansible_host: 130.136.3.143
+      ansible_user: debian
+
+# vi :set ft=yaml

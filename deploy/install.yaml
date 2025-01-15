@@ -1,0 +1,5 @@
+- name: Deploy the application
+  hosts: basi
+  tasks:
+    - name: Deploy the application
+      ansible.builtin.import_tasks: tasks/deploy.yaml
