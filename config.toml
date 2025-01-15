@@ -1,6 +1,6 @@
 [db]
-user = "postgres"
-password = "password"
+user = "pippo"
+password = "pluto"
 host = "localhost"
 port = 5432
 dbname = "mydb"
