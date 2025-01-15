@@ -5,8 +5,11 @@ import (
 )
 
 type DB struct {
-	Port uint16
-	Host string
+	User     string
+	Password string
+	Host     string
+	Port     uint16
+	DBName   string
 }
 
 type Server struct {
