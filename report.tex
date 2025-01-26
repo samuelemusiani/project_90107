@@ -1,0 +1,867 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\graphicspath{ {./resources/} }
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{amsmath}
+
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+
+% ---------------- FOR SQL ------------------------
+\usepackage{xcolor,listings}
+\usepackage{textcomp}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{HTML}{C42043}
+\definecolor{backcolour}{HTML}{F2F2F2}
+\definecolor{bookColor}{cmyk}{0,0,0,0.9}  
+
+\lstset{upquote=true}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codepurple},
+    numberstyle=\numberstyle,
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=10pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+}
+\lstset{style=mystyle}
+
+\newcommand\numberstyle[1]{%
+    \footnotesize
+    \color{codegray}%
+    \ttfamily
+    \ifnum#1<10 0\fi#1 |%
+}
+
+%------------------ END SQL ------------------
+
+\title{\textbf{Gestione torneo di Clash Royale}}
+\author{Fabio Murer, Samuele Musiani}
+\date{January 2025}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Analisi dei requisiti}
+
+\subsection{Requisiti espressi in linguaggi naturali}
+% TODO: Al momento è il copia e in colla della mail. Va aggiustanto in base alle modifiche che abbiamo fatto e sembra che dal loro esempio sia più specifico in alcuni punti, quindi si può allungare un po'
+Si vuole realizzare una base di dati per dei campionati e-sport di Clash Royale, di cui si desidera rappresentare i dati relativi ai giocatori, ai team, ai campionati, agli eventi e alle partite.
+
+Per quel che concerne i giocatori, identificati da un username, si vuole rappresentare il nome, il cognome, la data di nascita, il luogo di nascita, la data in cui hanno iniziato a giocare, il team attuale, i team passati, le partite giocate, i campionati giocati e il ranking.
+
+Dei team si vuole conoscere il nome, i giocatori che ne fanno parte, il coach, gli sponsor, gli organizzatori, la data di fondazione, il logo, il nome e lo stato geografico del team, il giocatore più giovane, il giocatore più vecchio, l'età media dei giocatori, il ranking, la media del ranking dei giocatori e i campionati giocati.
+
+Relativamente ai campionati, si vogliono rappresentare il nome, la data e gli orari, il luogo, il tipo, la leader-board, i partecipanti, gli eventi e il montepremi.
+
+Per gli eventi si desidera memorizzare il nome, la data e gli orari, il luogo, il montepremi, i partecipanti, le partite giocate e il campionato dell'evento.
+
+Per ogni partita si vuole rappresentare i giocatori, il tipo di partita, la data e l'orario, il logo, il vincitore, i mazzi usati, le carte usate, il tempo, il tipo di vittoria, il commentatore, l'evento a cui appartiene, i posti disponibili, il biglietto e i posti acquistati.
+
+Occorre memorizzare le statistiche generali per torneo, evento, partita e giocatore, tra cui la carta più usata, quante volte è stata usata una carta, l'elisir usato, l'elisir sprecato, i danni fatti, i danni subiti, il mazzo più usato, l'elisir del mazzo più usato e il tipo di torri più usato. 
+
+\subsection{Glossario dei termini}
+
+% TODO: Finire tabella e controllare che ci siano tutti i termini
+
+Fare riferimento alla tabella \ref{table_glossario_termini}
+
+\begin{table}
+\centering
+
+\begin{tabularx}{\textwidth}{|l|X|l|X|}
+\hline
+\textbf{Termine}   & \textbf{Descrizione} & \textbf{Sinonimi} & \textbf{Collegamenti} \\ \hline
+Giocatore & Persona che gioca a Clash Royale & - & Team, Mazzo, Partita, Leaderboard Giocatori \\ \hline
+Team      & Gruppo di giocatori pagati per competere in campionati & - & Giocatore, Leaderboard Teams \\ \hline
+Coach      & Componente di un Team che si occupa dell'allenamento & Allenatore & Team \\ \hline
+Mazzo   & Insieme di 8 carte usato da un giocatore in una o più partite & - & Carta, Partita \\ \hline
+Carta   & Oggetto su cui si basa il gioco, utilizzate in partita, organizzate in mazzi & - & Partita \\ \hline
+Partita   & Partita tra due giocatori & - & Evento \\ \hline
+Evento   & Insieme di partite in un dato luogo & - & Campionato \\ \hline
+Iscrizioni campionato   & Iscrizione di un team o di un giocatore ad un campionato & - & Team, Campionato \\ \hline
+Campionato   & Insieme di eventi & Torneo & Leaderboard Teams, Leaderboard Giocatori \\ \hline
+Leaderboard Teams   & Classifica dei teams di un campionato & Classifica Team & Team \\ \hline
+Leaderboard Giocatori & Classifica dei giocatori di un campionato & Classifica Giocatori & Giocatori \\ \hline
+Sponsor & Sponsor che sponsorizza uno o più team & & Team \\ \hline
+Sponsorizzazione & Budget che lo sponsor fornisce al team & & Team \\ \hline
+Spettatore & Persona che assiste ad un evento & & Evento \\ \hline
+Cronista & Persona che commenta le partite per gli spettatori & & Partita \\ \hline
+Biglietto & Oggetto che permette ad uno spettatore di assistere ad un evento & & Spettatore, Evento \\ \hline
+Elisir    & Valuta utilizzata durante le partite per piazzare carte & & Carta \\ \hline
+Torre     & Base dei giocatori, l'obbiettivo del gioco è distruggere quella dell'avversario & & Partita \\ \hline
+Ranking   & Numero di partite vinte se è riferito al giocatore, somma delle partite vinte dei giocatori del team se è riferito al team & & Parta, Giocatore, Team \\ \hline
+\end{tabularx}
+\caption{Glossario dei termini}
+\label{table_glossario_termini}
+\end{table}
+
+
+\subsection{Eliminazione delle ambiguità}
+
+I campionati possono essere per team, in cui tutti i giocatori del team collaborano per il punteggio, o per giocatore dove ogni giocatore ha il suo punteggio. i campionati per team avranno una classifica per team e i campionati per giocatore avranno una classifica giocatori.
+
+\subsection{Struttura dei requisiti}
+
+\subsubsection{Frasi di carattere generale}
+
+Si vuole realizzare una base di dati per una società che si occupa di organizzare campionati di Clash Royale, di cui si desidera rappresentare i dati relativi alle partite, gli eventi, classifiche e statistiche per giocatori e per teams, la vendita di biglietti dei vari eventi.
+
+\subsubsection{Frasi relative alle Persone}
+
+Per quanto riguarda le Persone si vuole conoscere il nome, il cognome, la data di nascita:
+\begin{itemize}
+    \item persona Allenatore(team che l'ha ingaggiato, salario)
+    \item persona Spettatore(a che eventi ha assistito)
+    \item persona Giocatore(Data in cui ha iniziato a giocare, username, ranking, partite giocate)
+\end{itemize}
+
+\subsubsection{Frasi relative ai Teams}
+
+Per ogni team si vuole salvare il nome, logo, stato geografico dove risiede, data di fondazione, giocatore più giovane, giocatore più vecchio e in che campionati gioca.
+
+\subsubsection{Frasi relative ai Mazzi}
+
+Dei mazzi si vuole sapere il costo medio di Elisir e da quali carte è formato.
+
+\subsubsection{Frasi relative alle Carte}
+
+Riguardo alle carte si vuole salvare il nome della carta stessa, il costo in elisir, il danno, in che partita e quante volte viene giocata.
+
+\subsubsection{Frasi relative alle Partite}
+
+Delle partite si vuole conoscere il vincitore, tipo di vittoria, durata della partita, orario di inizio, per ognuno dei due giocatori che partecipano alla partita si vuole sapere il mazzo utilizzato, tipo di torri utilizzate, elisir utilizzato, elisir sprecato e danni effettuati all'avversario.
+
+\subsubsection{Frasi relative agli Eventi}
+
+Per ogni evento si vuole salvare il nome, la data, il luogo dove si svolge, il montepremi, numero di posti totali, occupati, liberi per assistere all'evento, partite effettuate in quel evento, numero di partite totali.
+
+\subsubsection{Frasi relative ai Biglietti}
+
+Per quel che concerne i biglietti si vuole memorizzare il prezzo, l'evento e il posto assegnato all'interno della sala.
+
+\subsubsection{Frasi relative ai Campionati}
+
+Per quanto concerne i campionati si vuole rappresentare il nome, luogo, periodo temporale in cui si svolge, montepremi, tipologia, gli eventi di cui è formato e la leaderboard.
+
+\subsubsection{Frasi relative alle Leaderboards}
+
+Relativamente alle leaderboards si vuole rappresentare la lista di giocatori o la lista di teams associata alla relativa posizione a secondo della tipologia
+
+\subsection{Specifica operazioni}
+
+\begin{enumerate}
+    \item Inserire un nuovo giocatore
+    \item Formare un nuovo team
+    \item Inserire un nuovo coach
+    \item Inserire un nuovo sponsor
+    \item Inserire un nuovo campionato
+    \item Inserire un nuovo evento
+    \item Inserire una nuova partita
+    \item Inserire un nuovo mazzo
+    \item Inserire una nuova carta
+    \item Erogare un biglietto
+    \item Inserire un commentatore
+    \item Visualizzare la classifica del campionato
+    \item Visualizzare la carta più usata in un torneo
+    \item Visualizzare la carta più usata in un evento
+    \item Visualizzare la carta più usata in una partita
+    \item Visualizzare numero di volte che è stata usata una carta in un torneo
+    \item Visualizzare numero di volte che è stata usata una carta in un evento
+    \item Visualizzare numero di volte che è stata usata una carta in una partita
+    \item Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un torneo
+    \item Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un evento
+    \item Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in una partita
+    \item Visualizzare il mazzo più usato in un torneo
+    \item Visualizzare il mazzo più usato in un evento
+    \item Visualizzare il mazzo più efficace usato in un torneo
+    \item Visualizzare il mazzo più efficace usato in un evento
+    \item Visualizzare il tipo di torri più usato in un torneo
+    \item Visualizzare il tipo di torri più usato in un evento
+    \item Visualizzare biglietti venduti per un torneo 
+    \item Visualizzare biglietti venduti per un evento  
+    \item Visualizzare il cronista di una partita
+    \item Visualizzare team (coach, sponsor, giocatore più giovane, più vecchio, età media, ecc.)
+    \item Cambiare team ad un giocatore
+    
+\end{enumerate}
+
+\section{Progettazione concettuale}
+
+Per la progettazione concettuale è stata adottata una strategia mista, come descritto di seguito.
+
+\subsection{Identificazione delle entità e relazioni (bottom-up)}
+
+Sono state identificate (seguendo la strategia bottom-up) inizialmente le seguenti entità: giocate, allenatore, team, sponsor, cronista, carta, mazzo, partita, campionato, evento, biglietto, spettatore e vari tipi di leaderboard.
+
+Le entità sopra elencate si possono suddividere in 6 gruppi principali:
+\begin{enumerate}
+    \item \textbf{Giocatore e team}: Include tutte le entità che partecipano al gico
+    \item \textbf{Gioco}: Include campionato, evento e partita
+    \item \textbf{Carte e mazzi}: Include carte e mazzi
+    \item \textbf{Biglietti e spettatori}: Include biglietti, spettatori e cronista
+    \item \textbf{Leaderboard}: Include le varie tipologie di leaderboard
+    \item \textbf{Allenatore e sponsor}: Include allenatore e sponsor
+\end{enumerate}
+
+\subsection{Primo scheletro dello schema (top-down)}
+
+Ad un primo livello di astrazione, tenendo conto del raggruppamento fatto nel paragrafo sopra, è stato elaborato il seguente primo scheletro di schema concettuale:
+% SCHEMA 
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{resources/top-down.drawio.png}
+    \caption{Primo sceheltro di schema E.R.}
+\end{figure}
+
+\subsection{Sviluppo delle componenti dello scheletro (inside-out)}
+
+\subsubsection{Giocatori, teams, allenatori cronisti, spettatori e sponsor}
+
+Giocatori, Allenatori, Spettatori e Cronisti hanno tutti degli attributi di base in comune, è stato quindi opportunamente deciso di creare un entità padre Persona con i suddetti attributi. Il team è composto da almeno un giocatore ma possono esistere giocatori anche senza team, inoltre il team deve avere un allenatore. Gli sponsor possono sponsorizzare tanti team e i team possono essere sponsorizzati da tanti sponsor diversi. Gli spettatori possono assistere a un evento avendo un biglietto, lo spettatore può assistere a tanti eventi. Per quanto riguarda il Cronista può commentare tante partite ma una partita deve essere commentata da almeno un commentatore.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{resources/giocatori-teams.drawio.png}
+    \caption{Schema E.R Giocatori, teams, allenatori cronisti, spettatori e sponsor}
+\end{figure}
+
+\subsubsection{Campionato, evento, partita, classifiche}
+
+Un campionato è formato da almeno un evento, un evento deve appartenere ad un campionato, inoltre l'evento è composto da numerose partite (almeno una), ogni partita deve appartenere ad un evento. I campionati inoltre hanno una leaderboard che può essere di teams o giocatori, la leaderboard di teams è formata da tanti teams, la leaderboard giocatori è formata da tanti giocatori.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{resources/eventi.drawio.png}
+    \caption{Schema E.R Campionato, evento, partita, classifiche}
+\end{figure}
+
+\subsubsection{Carte e Mazzi}
+
+Il mazzo è formato da molte carte (precisamente 8), una carta però può anche non fare parte di nessun mazzo nel caso che i giocatori non scelgano di utilizzarla o può trovarsi in più mazzi diversi se i giocatori la usano spesso.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{resources/carta-mazzo.drawio.png}
+    \caption{Schema E.R Carte e Mazzi}
+\end{figure}
+
+\subsection{Unione delle componenti nello schema finale}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{resources/all.drawio.png}
+    \caption{Schema E.R finale con tutti i componenti}
+\end{figure}
+
+\subsection{Dizionario dei dati}
+
+\subsubsection{Entità}
+Fare riferimento alla tabella \ref{table_entita_dizionario}
+
+\begin{table}
+    \centering
+\begin{tabularx}{\textwidth}{|l|X|X|l|}
+\hline
+\textbf{Nome entità}   & \textbf{Descrizione} & \textbf{Attributi} & \textbf{Identificatore} \\ \hline
+Persona & Persona generica & Nome (stringa), Cognome (stringa), Data di nascita (data), Luogo di nascita (stringa) & ID (numerico) \\ \hline
+Coach & Allenatore di un team & " & " \\ \hline
+Spettatore & Persona che paga per guardare un evento & " & " \\ \hline
+Cronista & Commentatore di una partita & " & " \\ \hline
+Giocatore & Persona che gioca a Clash Royale & Nome (stringa), Cognome (stringa), Data di nascita (data), Luogo di nascita (stringa), username (stringa), DIG (stringa) & ID (numerico) \\ \hline
+Team & Insieme di giocatori & DF (data), Logo (immagine), Nome (stringa) Stato geografico (stringa) & " \\ \hline
+Biglietto & Biglietto per assistere ad un evento & Prezzo (string), Posto (numerico) & " \\ \hline
+Campionato & Insieme di eventi & Nome (stringa), Luogo (stringa), Data inizio (data), Data fine (data), Tipo (stringa), Montepremi (numerico) & " \\ \hline
+Evento & Insieme di partite & Nome (stringa), Luogo (stringa), Data (stringa), Posti totali (stringa), Posti usati (stringa) & " \\ \hline
+Partita & Partita tra due giocatori & Tempo (numerico), Tipo di vittoria (stringa), Vincitore (numerico), Orario (data) & " \\ \hline
+Mazzo & Insieme di carte usate da un giocatore in una partita & - & " \\ \hline
+Carta & Carta singola che si può utilizzare per formare un mazzo & Nome (stringa), Elisir (numerico), Danno (numerico) & " \\ \hline
+Leaderboard & Classifica dei team/giocatori & - & " \\ \hline
+Leaderboard teams & Classifica dei team & - & " \\ \hline
+Leaderboard giocatori & Classifica dei giocatori & - & " \\ \hline
+Sponsor & Figura che sponsorizza un team & Nome (string) & " \\ \hline
+\end{tabularx}
+\caption{Entità nel dizionario dei dati}
+\label{table_entita_dizionario}
+\end{table}
+
+
+\subsubsection{Relazioni}
+Fare rifermento alla tabella \ref{table_relazioni_dizionario}
+
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{|l|X|X|X|}
+\hline
+\textbf{Nome entità}   & \textbf{Descrizione} & \textbf{Entità coinvolte} & \textbf{Attributi} \\ \hline
+Gioca & Associa un giocatore ad un partita ed un mazzo & Giocatore (0,N), Mazzo (1,1) & Elisir usato (numerico), Elisir sprecato (numerico), Danni fatti (numerico), Tipo di torri (????) \\ \hline
+Giocata in & Associa una carta giocata ad una partita & Carta (0, N), Partita (0, N) & Volte (numerico) \\ \hline
+Formato & Associa il mazzo alle carte di cui è formato & Mazzo (1,N), Carta (0, N) & - \\ \hline
+Formato & Associa un evento alle partite di cui è formato & Partita (1,1), Evento (1,N) & - \\ \hline
+Formato & Associa un campionato agli eventi di cui è formato & Evento (1,1), Campionato (1, N) & - \\ \hline
+Commenta & Associa un cronista ad una partita & Cronista (0,N), Partita (1,N) & Lingua (stringa) \\ \hline
+Allena & Associa un coach ad un team & Coach (0,1), Team (1,1) & Salario (numerico) \\ \hline
+Assiste & Associa uno spettatore ad un evento e un biglietto & Spettatore (0,N), Biglietto (1,1), Evento (0,N) & - \\ \hline
+Ingaggiato & Associa un giocatore ad un team & Giocatore (0,1), Team (1,N) & Salario (numerico) \\ \hline
+Sponsorizza & Associa uno sponsor ad un team & Team (0,N), Sponsor (0,N) & Budget (numerico) \\ \hline
+Giocano & Associa un team ad un campionato & Team (0,N), Campionato (1,N) & - \\ \hline
+Formata & Associa la leaderboard ai teams & Leaderboard (1,N), Team (0,N) & - \\ \hline
+Formata & Associa la leaderboard ai giocatori& Leaderboard (1,N), Giocatore (0,N) & - \\ \hline
+Ha & Associa una leaderboard ad un campionato & Campionato (1,1), Leaderboard (1,1) & - \\ \hline
+
+\end{tabularx}
+\caption{Relazioni nel dizionario dei dati}
+\label{table_relazioni_dizionario}
+\end{table}
+
+\subsection{Regole aziendali}
+
+\section{Progettazione logica}
+
+\subsection{Tavole dei volumi e delle operazioni}
+\subsubsection{Tavola dei volumi}
+
+Fare riferimento alla tabella \ref{table_volumi}
+
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{|l|X|X|}
+\hline 
+\textbf{Concetto} & \textbf{Tipo} & \textbf{Volume} \\ \hline
+Giocatore & E & 195 \\ \hline % 5 giocatori a team + 20 non in un team
+Team & E & 35 \\ \hline % arbitrario
+Coach & E & 35 \\ \hline % uguale ai team
+Spettatore & E & 1600 \\ \hline % aribitrario
+Cronista & E & 8 \\ \hline % arbitrario
+Biglietto & E & 2500 \\ \hline % 100 bigietti ad evento
+Campionato & E & 5 \\ \hline % arbitrario
+Evento & E & 25 \\ \hline % 5 per campionato
+Partita & E & 1000 \\ \hline  % 40 partite ad evento
+Mazzo & E & 350 \\ \hline % 2 a giocatore
+Carta & E & 130 \\ \hline % arbitrario
+Sponsor & E & 20 \\ \hline % arbitrario
+Leaderboard team & E & 3 \\ \hline % sommato deve dare campionati totali
+Leaderboard giocatore & E & 2 \\ \hline % sommato deve dare campionati totali
+
+Gioca & R & 1000 \\ \hline % Doppio delle partite giocate
+Giocata in & R & 3500 \\ \hline % assumiamo che giochiamo 7 carte diverse a partita (500 * 7)
+Formato (campionato-evento) & R & 25 \\ \hline  %uguale a numero eventi
+Formato (evento-partita) & R & 500 \\ \hline % uguale a numero partite
+Formato (mazzo-carta) & R & 8 \\ \hline % 8 per forza
+Commenta & R & 1000 \\ \hline % 2 cronisti a partita
+Allena  & R & 35 \\ \hline % uguale al numero dei team
+Assiste & R & 2500 \\ \hline % uguale al numero dei biglietti
+Ingaggiato & R & 175 \\ \hline % 5 giocatori a team
+Sponsorizza & R & 70 \\ \hline % 2 sponsor a team
+Giocano & R & 40 \\ \hline % 8 team a campionato
+Formata (leaderbord-teams) & R & 32 \\ \hline % 8 team a campionato
+Formata (leaderbord-giocatori) & R & 80 \\ \hline % 40 giocatori a campionato
+Ha & R & 5 \\ \hline % numero dei campionati
+\end{tabularx}
+\caption{Tavola dei volumi}
+\label{table_volumi}
+\end{table}
+
+\subsubsection{Tavola delle operazioni}
+Fare riferimento alla tabella \ref{table_operazioni}
+
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline 
+\textbf{Operazione} & \textbf{Frequenza} \\ \hline
+1 & 20 volte all'anno \\ \hline
+2 & 2 volte all'anno \\ \hline
+3 & 5 volte all'anno \\ \hline
+4 & 1 volte all'anno \\ \hline
+5 & 4 volte all'anno \\ \hline
+6 & 20 volte all'anno \\ \hline
+7 & 800 volte all'anno \\ \hline
+8 & 8 volte a settimana \\ \hline
+9 & 5 volte all'anno \\ \hline
+10 & 2000 volte all'anno \\ \hline
+11 & 2 volte all'anno \\ \hline
+12 & 130 volte al giorno \\ \hline
+13 & 10 volte al giorno \\ \hline
+14 & 10 volte al giorno \\ \hline
+15 & 4 volte al giorno \\ \hline
+16 & 10 volte al giorno \\ \hline
+17 & 10 volte al giorno \\ \hline
+18 & 8 volte al giorno \\ \hline
+19 & 5 volte al giorno \\ \hline
+20 & 4 volte al giorno \\ \hline
+21 & 10 volte al giorno \\ \hline
+22 & 6 volte al giorno \\ \hline
+23 & 5 volte al giorno \\ \hline
+24 & 8 volte al giorno \\ \hline
+25 & 7 volte al giorno \\ \hline
+26 & 1 volta al giorno \\ \hline
+27 & 1 volta al giorno \\ \hline
+28 & 2 volte al giorno \\ \hline
+29 & 8 volte al giorno \\ \hline
+30 & 3 volte al giorno \\ \hline
+31 & 5 volte al giorno \\ \hline
+32 & n volte a settimana \\ \hline
+\end{tabularx}
+\caption{Tavola delle operazioni}
+\label{table_operazioni}
+\end{table}
+
+\subsection{Ristrutturazione dello schema concettuale}
+
+\subsubsection{Eliminazione delle ridondanze}
+Abbiamo rilevato un ridondanza sugli attributi (GPG, GPV e Età media giocatori) sull'entità team. Dobbiamo valutare se salvare questi valori e creare una ridondanza oppure calcolarli tutte le volte che sono necessari. GPG (Giocatore più giovane) è calcolato prendendo il giocatore con l'età inferiore che appartiene al team. GPV (Giocatore più vecchio) è calcolato nello stesso modo prendendo però il giocatore con età maggiore. Età media giocatori è calcolato facendo una media dell'età dei componenti del team. Le operazioni che coinvolgono questi attributi sono la n.31 e la n.32 \\
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|X|X|}
+        \hline 
+        \textbf{Operazione 31} & & & \\ \hline
+        \textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+        GPG & Entità & 1 & L \\ \hline
+        GPV & Entità & 1 & L \\ \hline
+        Età media giocatori & Entità & 1 & L \\ \hline
+    \end{tabularx}
+    \caption{Tavole degli accessi in presenza di ridondanza op. 31}
+\end{table}
+
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|X|X|}
+        \hline
+        \textbf{Operazione 32} & & & \\ \hline
+        \textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+        GPG & Entità & 5 & L \\ \hline
+        GPG & Entità & 1 & W \\ \hline
+        GPV & Entità & 5 & L \\ \hline
+        GPV & Entità & 1 & W \\ \hline
+        Età media giocatori & Entità & 5 & L \\ \hline
+        Età media giocatori & Entità & 1 & W \\ \hline
+    \end{tabularx}
+    \caption{Tavole degli accessi in presenza di ridondanza op. 32}
+\end{table}
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|X|X|}
+        \hline 
+        \textbf{Operazione 31} & & & \\ \hline
+        \textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+        GPG & Entità & 5 & L \\ \hline
+        GPV & Entità & 5 & L \\ \hline
+        Età media giocatori & Entità & 5 & L \\ \hline
+    \end{tabularx}
+    \caption{Tavole degli accessi in assenza di ridondanza op. 31}
+\end{table}
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|X|X|}
+        \hline
+        \textbf{Operazione 32} & & & \\ \hline
+        \textbf{Concetto} & \textbf{Costrutto} & \textbf{Accessi} & \textbf{Tipo} \\ \hline
+        GPG & Entità & 0 & L \\ \hline
+        GPG & Entità & 0 & W \\ \hline
+        GPV & Entità & 0 & L \\ \hline
+        GPV & Entità & 0 & W \\ \hline
+        Età media giocatori & Entità & 0 & L \\ \hline
+        Età media giocatori & Entità & 0 & W \\ \hline
+    \end{tabularx}
+    \caption{Tavole degli accessi in assenza di ridondanza op. 32}
+\end{table}
+
+In presenza di ridondanza il costo delle varie operazioni (considerando doppio il costo di una scrittura rispetto alla lettura):
+$$ Op.31 = 3 (\text{costo}) \cdot 5 (\text{al giorno}) \cdot 7 (\text{giorni a settimana}) = 105 $$
+$$ Op.32 = 21 (\text{costo}) \cdot 2 (\text{a settimana}) = 42 $$
+$$\text{Totale} = 147$$
+
+In assenza di ridondanza il costo delle varie operazioni (considerando doppio il costo di una scrittura rispetto alla lettura):
+$$ Op.31 = 15 (\text{costo}) \cdot 5 (\text{al giorno}) \cdot 7 (\text{giorni a settimana}) = 525 $$
+$$ Op.32 = 0 (\text{costo}) \cdot 2 (\text{a settimana}) = 0 $$
+$$\text{Totale} = 525$$
+
+Di conseguenza riteniamo opportuno mantenere la ridondanza.
+
+\subsubsection{Eliminazione delle gerarchie}
+
+Riguardo le entità Spettatore, Coach, Cronista abbiamo deciso di accorparle in Persona in quanto non avevano campi aggiuntivi rispetto a Persona, Giocatore viene modellata attraverso una relazione perché l'entità Giocatore viene acceduta indipendentemente dall'entità padre. \\
+Riguardo l'entità Leaderboard abbiamo eseguito l'accorpamento nei figli Leaderboard Teams e Leaderboard Giocatori perché essendo che un campionato ha solo uno dei due tipi di leaderboard, queste due entità vengono accedute una alla volta.
+
+Fare riferimento alla figura \ref{fig_eliminazione_gerarchie}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{resources/all-no-gerarchie.drawio.png}
+    \caption{Schema E.R eliminazione gerarchie}
+    \label{fig_eliminazione_gerarchie}
+\end{figure}
+
+
+\subsubsection{Accorpamenti e partizionamenti}
+
+% TODO: Riguardare (forse l'evento si può dividere in modo da escludere i posti disponibile/comprati dalle query classiche)
+Non abbiamo trovato nessun possibile accorpamento o partizionamento all'interno nei nostri schemi E.R.
+
+\subsubsection{Eliminazione degli attributi multivalore}
+% TODO: Secondo noi non ce ne sono, ma bisognerebbe controllare meglio
+
+\subsubsection{Elenco degli identificatori principali}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth} { |X|X| }
+    \hline
+    \textbf{Nome entità}   & \textbf{Identificatore} \\ \hline
+    Persona & ID (numerico) \\ \hline
+    Giocatore & ID (numerico) \\ \hline % TODO: ricontrollare se il giocatore ha come identificatore l'id
+    Team & ID (numerico) \\ \hline
+    Biglietto & ID (numerico) \\ \hline
+    Campionato & ID (numerico) \\ \hline
+    Evento & ID (numerico) \\ \hline
+    Partita & ID (numerico) \\ \hline
+    Mazzo & ID (numerico) \\ \hline
+    Carta & ID (numerico) \\ \hline
+    Leaderboard teams & ID (numerico) \\ \hline
+    Leaderboard giocatori & ID (numerico) \\ \hline
+    Sponsor & ID (numerico) \\ \hline
+    \end{tabularx}
+\caption{Identificatori principali}
+\end{table}
+
+
+\subsection{Normalizzazione}
+
+% TODO: Samu
+
+
+\subsection{Traduzione verso il modello relazionale}
+
+Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tabella \ref{table_traduzione_vincoli_riferimento}
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{|l|X|}
+        \hline
+        \textbf{Entità - Relazione} & \textbf{Traduzione} \\ \hline
+        Persona & Persona(\underline{ID}, Nome, Cognome, Data di nascita, Luogo di nascita) \\ \hline
+        Giocatore & Giocatore(\underline{Persona}, Username, DIG) \\ \hline
+        Team & Team(\underline{ID}, Nome, Logo, DF, Stato geografico, GPG, GPV, MRG, Età media giocatori) \\ \hline
+        Sponsor & Sponsor(\underline{ID}, Nome) \\ \hline
+        Campionato & Campionato(\underline{ID}, Nome, Luogo, Data inizio, Data fine, Tipo, Montepremi) \\ \hline
+        Leaderboard teams & LeaderboardT(\underline{ID}, Campionato)  \\ \hline
+        Leaderboard giocatori & LeaderboardG(\underline{ID}, Campionato) \\ \hline
+        Evento & Evento(\underline{ID}, Nome, Luogo, Data, Posti totali, Posti usati, Campionato) \\ \hline
+        Biglietto & Biglietto(\underline{ID}, Prezzo, Posto) \\ \hline
+        Partita & Partita(\underline{ID}, Vincitore, Tipo di Vittoria, Orario, Tempo, Evento) \\ \hline
+        Mazzo & Mazzo(\underline{ID}) \\ \hline % TODO: Secondo me non ha senso :(
+        Carta & Carta(\underline{ID}, Nome, Elisir, Danno) \\ \hline
+        Ingaggio & Ingaggio(\underline{Team}, \underline{Giocatore}, Salario) \\ \hline
+        Allena & Allena(\underline{Persona}, \underline{Team}, Salario) \\ \hline
+        Sponsorizza & Sponsorizza(\underline{Sponsor}, \underline{Team}, Budget) \\ \hline
+        Assiste & Assiste(\underline{Persona}, \underline{Evento}, Biglietto) \\ \hline
+        Gioca & Gioca(\underline{Giocatore}, \underline{Partita}, Mazzo, Elisir usato, Elisir sprecato, Danni fatti, Tipo di torri) \\ \hline
+        Commenta & Commenta(\underline{Persona}, \underline{Partita}, Lingua) \\ \hline
+        Giocata in & GiocataIn(\underline{Carta}, \underline{Partita}, Volte) \\ \hline
+        Formato & Formato(\underline{Mazzo}, \underline{Carta}) \\ \hline
+        Formata (teams) & FormataT(\underline{Campionato}, \underline{Team}, Posizione) \\ \hline
+        Formata (giocatori) & FormataG(\underline{Campionato}, \underline{Giocatore}, Posizione) \\ \hline
+    \end{tabularx}
+    \caption{Entità-relazione e traduzione verso il modella relazionale}
+    \label{table_entita_relazione_traduzione}
+\end{table}
+
+\begin{table}
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \textbf{Traduzione} & \textbf{Vincoli di riferimento} \\ \hline
+        Persona(\underline{ID}, Nome, Cognome, Data di nascita, Luogo di nascita) & - \\ \hline
+        Giocatore(\underline{Persona}, Username, DIG) & Persona $\xrightarrow{}$ Persona.ID \\ \hline
+        Team(\underline{ID}, Nome, Logo, DF, Stato geografico, GPG, GPV, MRG, Età media giocatori) & GPG $\xrightarrow{}$ Giocatore.ID, GPV $\xrightarrow{}$ Giocatore.ID \\ \hline
+        Sponsor(\underline{ID}, Nome) & - \\ \hline
+        Campionato(\underline{ID}, Nome, Luogo, Data inizio, Data fine, Tipo, Montepremi) & - \\ \hline
+        LeaderboardT(\underline{ID}, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
+        LeaderboardG(\underline{ID}, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
+        Evento(\underline{ID}, Nome, Luogo, Data, Posti totali, Posti usati, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
+        Biglietto(\underline{ID}, Prezzo, Posto) & - \\ \hline
+        Partita(\underline{ID}, Vincitore, Tipo di Vittoria, Orario, Tempo, Evento) & Vincitore $\xrightarrow{}$ Giocatore.ID, Evento $\xrightarrow{}$ Evento.ID \\ \hline
+        Mazzo(\underline{ID}) & - \\ \hline % TODO: Secondo me non ha senso :(
+        Carta(\underline{ID}, Nome, Elisir, Danno) & \\ \hline
+        Ingaggio(\underline{Team}, \underline{Giocatore}, Salario) & Team $\xrightarrow{}$ Team.ID, Giocatore $\xrightarrow{}$ Giocatore.Persona \\ \hline % È giusto Giocatore.Persona?
+        Allena(\underline{Persona}, \underline{Team}, Salario) & Persona $\xrightarrow{}$ Persona.ID, Team $\xrightarrow{}$ Team.ID \\ \hline
+        Sponsorizza(\underline{Sponsor}, \underline{Team}, Budget) & Sponsor $\xrightarrow{}$ Sponsor.ID, Team $\xrightarrow{}$ Team.ID \\ \hline
+        Assiste(\underline{Persona}, \underline{Evento}, biglietto) & Persona $\xrightarrow{}$ Persona.ID Evento $\xrightarrow{}$ Evento.ID, Biglietto $\xrightarrow{}$ Biglietto.ID \\ \hline
+        Gioca(\underline{Giocatore}, \underline{Partita}, Mazzo, Elisir usato, Elisir sprecato, Danni fatti, Tipo di torri) & Giocatore $\xrightarrow{}$ Giocatore.Persona, Partita $\xrightarrow{}$ Partita.ID, Mazzo $\xrightarrow{}$ Mazzo.ID \\ \hline
+        Commenta(\underline{Persona}, \underline{Partita}, Lingua) & Persona $\xrightarrow{}$ Persona.ID, Partita $\xrightarrow{}$ Partita.ID \\ \hline
+        GiocataIn(\underline{Carta}, \underline{Partita}, Volte) & Carta $\xrightarrow{}$ Carta.ID, Partita $\xrightarrow{}$ Partita.ID \\ \hline
+        Formato(\underline{Mazzo}, \underline{Carta}) & Mazzo $\xrightarrow{}$ Mazzo.ID, Carta $\xrightarrow{}$ Carta.ID \\ \hline
+        FormataT(\underline{Campionato}, \underline{Team}, Posizione) & Campionato $\xrightarrow{}$ Campionato.ID, Team $\xrightarrow{}$ Team.ID \\ \hline
+        FormataG(\underline{Campionato}, \underline{Giocatore}, Posizione) & Campionato $\xrightarrow{}$ Campionato.ID, Giocatore $\xrightarrow{}$ Giocatore.Persona \\ \hline
+    \end{tabularx}
+    \caption{Traduzione e vincoli di riferimento verso il modella relazionale}
+    \label{table_traduzione_vincoli_riferimento}
+\end{table}
+
+\section{Codifica SQL}
+
+\subsection{Definzione dello schema}
+
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={clustered},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+CREATE TABLE IF NOT EXISTS Persona(
+  id SERIAL PRIMARY KEY,
+  nome TEXT NOT NULL,
+  cognome TEXT NOT NULL,
+  data_nascita DATE NOT NULL,
+  luogo_nascita TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Giocatore(
+  id SERIAL PRIMARY KEY,
+  username TEXT NOT NULL,
+  dig DATE NOT NULL,
+  FOREIGN KEY (id) REFERENCES Persona(id)
+);
+
+CREATE TABLE IF NOT EXISTS Team(
+  id SERIAL PRIMARY KEY,
+  nome TEXT NOT NULL,
+  logo BYTEA,
+  data_fondazione DATE NOT NULL,
+  stato_geografico TEXT NOT NULL,
+  gpg INT NOT NULL,
+  gpv INT NOT NULL,
+  mrg INT NOT NULL, -- Che roba e'???
+  eta_media REAL NOT NULL,
+  FOREIGN KEY (gpg) REFERENCES Giocatore(id),
+  FOREIGN KEY (gpv) REFERENCES Giocatore(id)
+);
+
+CREATE TABLE IF NOT EXISTS Sponsor(
+  id SERIAL PRIMARY KEY,
+  nome TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Campionato(
+  id SERIAL PRIMARY KEY,
+  nome TEXT NOT NULL,
+  luogo TEXT NOT NULL,
+  data_inizio DATE NOT NULL,
+  data_fine DATE NOT NULL,
+  tipo TEXT NOT NULL,
+  montepremi INT NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS LeaderboardT(
+  id SERIAL PRIMARY KEY,
+  campionato INT NOT NULL,
+  FOREIGN KEY (campionato) REFERENCES Campionato(id)
+);
+
+CREATE TABLE IF NOT EXISTS LeaderboardG(
+  id SERIAL PRIMARY KEY,
+  campionato INT NOT NULL,
+  FOREIGN KEY (campionato) REFERENCES Campionato(id)
+);
+
+CREATE TABLE IF NOT EXISTS Evento(
+  id SERIAL PRIMARY KEY,
+  nome TEXT NOT NULL,
+  luogo TEXT NOT NULL,
+  data DATE NOT NULL,
+  posti_totali INT NOT NULL,
+  posti_usati INT NOT NULL,
+  campionato INT NOT NULL,
+  FOREIGN KEY (campionato) REFERENCES Campionato(id)
+);
+
+CREATE TABLE IF NOT EXISTS Biglietto(
+  id SERIAL PRIMARY KEY,
+  prezzo REAL NOT NULL,
+  posto INT NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS Partita(
+  id SERIAL PRIMARY KEY,
+  vincitore INT NOT NULL,
+  tipo_vittoria TEXT NOT NULL,
+  orario TIME NOT NULL,
+  tempo INT NOT NULL,
+  evento INT NOT NULL,
+  FOREIGN KEY (vincitore) REFERENCES Giocatore(id),
+  FOREIGN KEY (evento) REFERENCES Evento(id)
+);
+
+CREATE TABLE IF NOT EXISTS Mazzo(
+  id SERIAL PRIMARY KEY,
+);
+
+CREATE TABLE IF NOT EXISTS Carta(
+  id SERIAL PRIMARY KEY,
+  nome TEXT NOT NULL,
+  elisir INT NOT NULL,
+  danni INT NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS Ingaggio(
+  team INT NOT NULL,
+  giocatore INT NOT NULL,
+  salario INT NOT NULL,
+  PRIMARY KEY (team, giocatore),
+  FOREIGN KEY (team) REFERENCES Team(id),
+  FOREIGN KEY (giocatore) REFERENCES Giocatore(id)
+);
+
+CREATE TABLE IF NOT EXISTS Allena(
+  persona INT NOT NULL,
+  team INT NOT NULL,
+  salario INT NOT NULL,
+  PRIMARY KEY (persona, team),
+  FOREIGN KEY (persona) REFERENCES Persona(id),
+  FOREIGN KEY (team) REFERENCES Team(id)
+);
+
+CREATE TABLE IF NOT EXISTS Sponsorizza(
+  sponsor INT NOT NULL,
+  team INT NOT NULL,
+  budget INT NOT NULL,
+  PRIMARY KEY (sponsor, team),
+  FOREIGN KEY (sponsor) REFERENCES Sponsor(id),
+  FOREIGN KEY (team) REFERENCES Team(id)
+);
+
+CREATE TABLE IF NOT EXISTS Assiste(
+  persona INT NOT NULL,
+  evento INT NOT NULL,
+  biglietto INT NOT NULL,
+  PRIMARY KEY (persona, evento),
+  FOREIGN KEY (persona) REFERENCES Persona(id),
+  FOREIGN KEY (evento) REFERENCES Evento(id),
+);
+
+CREATE TABLE IF NOT EXISTS Gioca(
+  giocatore INT NOT NULL,
+  partita INT NOT NULL,
+  mazzo INT NOT NULL,
+  elisir_usato INT NOT NULL,
+  elisir_sprecato INT NOT NULL,
+  danni_fatti INT NOT NULL,
+  tipo_torri TEXT NOT NULL,
+  PRIMARY KEY (giocatore, partita),
+  FOREIGN KEY (giocatore) REFERENCES Giocatore(id),
+  FOREIGN KEY (partita) REFERENCES Partita(id),
+  FOREIGN KEY (mazzo) REFERENCES Mazzo(id)
+);
+
+CREATE TABLE IF NOT EXISTS Commenta(
+  persona INT NOT NULL,
+  partita INT NOT NULL,
+  lingua TEXT NOT NULL,
+  PRIMARY KEY (persona, partita),
+  FOREIGN KEY (persona) REFERENCES Persona(id),
+  FOREIGN KEY (partita) REFERENCES Partita(id)
+);
+
+CREATE TABLE IF NOT EXISTS Formato(
+  mazzo INT NOT NULL,
+  carta INT NOT NULL,
+  PRIMARY KEY (mazzo, carta),
+  FOREIGN KEY (mazzo) REFERENCES Mazzo(id),
+  FOREIGN KEY (carta) REFERENCES Carta(id)
+);
+
+CREATE TABLE IF NOT EXISTS FormataT(
+  campionato INT NOT NULL,
+  team INT NOT NULL,
+  posizione INT NOT NULL,
+  PRIMARY KEY (campionato, team),
+  FOREIGN KEY (campionato) REFERENCES Campionato(id),
+  FOREIGN KEY (team) REFERENCES Team(id)
+);
+
+CREATE TABLE IF NOT EXISTS FormataG(
+  campionato INT NOT NULL,
+  giocatore INT NOT NULL,
+  posizione INT NOT NULL,
+  PRIMARY KEY (campionato, giocatore),
+  FOREIGN KEY (campionato) REFERENCES Campionato(id),
+  FOREIGN KEY (giocatore) REFERENCES Giocatore(id)
+);
+\end{lstlisting}
+
+\subsection{Codifica delle operazioni}
+
+\subsubsection{Inserire un nuovo giocatore}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={clustered},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Persona VALUES(...);
+INSERT INTO Giocatore VALUES(...);
+\end{lstlisting}
+\subsubsection{Formare un nuovo team}
+\subsubsection{Inserire un nuovo coach}
+\subsubsection{Inserire un nuovo sponsor}
+\subsubsection{Inserire un nuovo campionato}
+\subsubsection{Inserire un nuovo evento}
+\subsubsection{Inserire una nuova partita}
+\subsubsection{Inserire un nuovo mazzo}
+\subsubsection{Inserire una nuova carta}
+\subsubsection{Erogare un biglietto}
+\subsubsection{Inserire un commentatore}
+\subsubsection{Visualizzare la classifica del campionato}
+\subsubsection{Visualizzare la carta più usata in un torneo}
+\subsubsection{Visualizzare la carta più usata in un evento}
+\subsubsection{Visualizzare la carta più usata in una partita}
+\subsubsection{Visualizzare numero di volte che è stata usata una carta in un torneo}
+\subsubsection{Visualizzare numero di volte che è stata usata una carta in un evento}
+\subsubsection{Visualizzare numero di volte che è stata usata una carta in una partita}
+\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un torneo}
+\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un evento}
+\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in una partita}
+\subsubsection{Visualizzare il mazzo più usato in un torneo}
+\subsubsection{Visualizzare il mazzo più usato in un evento}
+\subsubsection{Visualizzare il mazzo più efficace usato in un torneo}
+\subsubsection{Visualizzare il mazzo più efficace usato in un evento}
+\subsubsection{Visualizzare il tipo di torri più usato in un torneo}
+\subsubsection{Visualizzare il tipo di torri più usato in un evento}
+\subsubsection{Visualizzare biglietti venduti per un torneo }
+\subsubsection{Visualizzare biglietti venduti per un evento  }
+\subsubsection{Visualizzare il cronista di una partita}
+\subsubsection{Visualizzare team (coach, sponsor, giocatore più giovane, più vecchio, età media, ecc.)}
+\subsubsection{Cambiare team ad un giocatore}
+
+
+\section{Testing}
+
+\end{document}
