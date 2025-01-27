@@ -27,13 +27,13 @@ func main() {
 	conf := config.Get()
 	slog.With("Config", conf).Debug("Config loaded")
 
-	db, err := db.Init(conf, sqlFiles)
+	_, err = db.Init(conf, sqlFiles)
 	if err != nil {
 		slog.With("Error", err).Error("Error initializing database")
 		os.Exit(1)
 	}
 
-	err = handler.InitAndServe(conf, db)
+	err = handler.InitAndServe(conf)
 	if err != nil {
 		slog.With("Error", err).Error("Error initializing server")
 		os.Exit(1)

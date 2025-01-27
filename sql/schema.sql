@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS Team(
   logo BYTEA,
   data_fondazione DATE NOT NULL,
   stato_geografico TEXT NOT NULL,
-  gpg INT NOT NULL DEFAULT 0,
-  gpv INT NOT NULL DEFAULT 0,
-  eta_media REAL NOT NULL DEFAULT 0,
+  gpg INT DEFAULT NULL,
+  gpv INT DEFAULT NULL,
+  eta_media REAL DEFAULT NULL,
   FOREIGN KEY (gpg) REFERENCES Giocatore(id),
   FOREIGN KEY (gpv) REFERENCES Giocatore(id)
 );
