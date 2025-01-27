@@ -73,7 +73,6 @@ CREATE TABLE IF NOT EXISTS Biglietto(
 CREATE TABLE IF NOT EXISTS Partita(
   id SERIAL PRIMARY KEY,
   vincitore INT NOT NULL,
-  tipo_vittoria TEXT NOT NULL,
   orario TIME NOT NULL,
   tempo INT NOT NULL,
   evento INT NOT NULL,
