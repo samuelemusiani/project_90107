@@ -66,25 +66,71 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="greetings">
+  <div class="greetings w-full">
     <div class="flex flex-col gap-2">
       <h3 class="font-bold text-xl">Crea team</h3>
-      <form class="flex flex-col max-w-sm gap-2" @click.prevent>
-        <input type="text" placeholder="Nome" v-model="nome" class="input input-bordered" />
-        <input type="file" placeholder="Logo" disabled class="input input-bordered" />
-        <input type="date" placeholder="Data di fondazione" v-model="dataFondazione" class="input input-bordered" />
-        <input type="text" placeholder="Stato geografico" v-model="statoGeografico" class="input input-bordered" />
 
-        <button @click="creaTeam" class="btn btn-primary">Crea team</button>
+      <form class="flex flex-col gap-2" @click.prevent>
+        <div>
+          <div class="label">
+            <span class="label-text">Nome</span>
+          </div>
+          <input type="text" placeholder="Nome" v-model="nome" class="input input-bordered w-full" />
+        </div>
+
+        <div>
+          <div class="label">
+            <span class="label-text">Logo</span>
+          </div>
+          <input type="file" placeholder="Logo" disabled class="file-input file-input-bordered w-full" />
+        </div>
+
+        <div>
+          <div class="label">
+            <span class="label-text">Data di fondazione</span>
+          </div>
+          <input type="date" placeholder="Data di fondazione" v-model="dataFondazione"
+            class="input input-bordered w-full" />
+        </div>
+
+        <div>
+          <div class="label">
+            <span class="label-text">Stato geografico</span>
+          </div>
+          <input type="text" placeholder="Stato geografico" v-model="statoGeografico"
+            class="input input-bordered w-full" />
+        </div>
+
+        <button @click="creaTeam" class="btn btn-primary mt-2">Crea team</button>
       </form>
 
-      <h3 class="font-bold text-xl">Ingaggia giocatore</h3>
-      <form class="flex flex-col max-w-sm gap-2" @click.prevent>
-        <input type="text" placeholder="Team" v-model="team" class="input input-bordered" />
-        <input type="text" placeholder="Giocatore" v-model="giocatore" class="input input-bordered" />
-        <input type="number" placeholder="Salario" v-model="salario" class="input input-bordered" />
+      <div class="divider"></div>
 
-        <button @click="ingaggiaGiocatore" class="btn btn-primary">Crea team</button>
+      <h3 class="font-bold text-xl">Ingaggia giocatore</h3>
+
+      <form class="flex flex-col gap-2" @click.prevent>
+        <div>
+          <div class="label">
+            <span class="label-text">Nome team</span>
+          </div>
+          <input type="text" placeholder="Team" v-model="team" class="input input-bordered w-full" />
+        </div>
+
+        <div>
+          <div class="label">
+            <span class="label-text">Username giocatore</span>
+          </div>
+          <input type="text" placeholder="Giocatore" v-model="giocatore" class="input input-bordered w-full" />
+        </div>
+
+        <div>
+          <div class="label">
+            <span class="label-text">Salario</span>
+          </div>
+          <input type="number" placeholder="Salario" v-model="salario" class="input input-bordered w-full" />
+        </div>
+
+        <button @click="ingaggiaGiocatore" class="btn btn-primary mt-2">Crea team</button>
       </form>
     </div>
   </div>

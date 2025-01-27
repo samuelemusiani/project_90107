@@ -43,16 +43,51 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="greetings">
+  <div class="greetings w-full">
     <h3 class="font-bold text-xl">Insert giocatore</h3>
 
-    <form class="flex flex-col max-w-sm gap-2" @click.prevent>
-      <input type="text" placeholder="Nome" v-model="nome" class="input input-bordered" />
-      <input type="text" placeholder="Cognome" v-model="cognome" class="input input-bordered" />
-      <input type="date" placeholder="Data di nascita" v-model="dataNascita" class="input input-bordered" />
-      <input type="text" placeholder="Luogo di nascita" v-model="luogoNascita" class="input input-bordered" />
-      <input type="text" placeholder="Username" v-model="username" class="input input-bordered" />
-      <input type="date" placeholder="Dig" v-model="dig" class="input input-bordered" />
+    <form class="flex flex-col w-full gap-2" @click.prevent>
+      <div>
+        <div class="label">
+          <span class="label-text">Nome</span>
+        </div>
+        <input type="text" placeholder="Nome" v-model="nome" class="input input-bordered w-full" />
+      </div>
+
+      <div>
+        <div class="label">
+          <span class="label-text">Cognome</span>
+        </div>
+        <input type="text" placeholder="Cognome" v-model="cognome" class="input input-bordered w-full" />
+      </div>
+
+      <div>
+        <div class="label">
+          <span class="label-text">Data di nascita</span>
+        </div>
+        <input type="date" placeholder="Data di nascita" v-model="dataNascita" class="input input-bordered w-full" />
+      </div>
+
+      <div>
+        <div class="label">
+          <span class="label-text">Luogo di nascita</span>
+        </div>
+        <input type="text" placeholder="Luogo di nascita" v-model="luogoNascita" class="input input-bordered w-full" />
+      </div>
+
+      <div>
+        <div class="label">
+          <span class="label-text">Username</span>
+        </div>
+        <input type="text" placeholder="Username" v-model="username" class="input input-bordered w-full" />
+      </div>
+
+      <div>
+        <div class="label">
+          <span class="label-text">Data di inzio gioco</span>
+        </div>
+        <input type="date" placeholder="Dig" v-model="dig" class="input input-bordered w-full" />
+      </div>
 
       <button @click="insertGiocatore" class="btn btn-primary">Insert user</button>
     </form>
