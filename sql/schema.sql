@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS Team(
   stato_geografico TEXT NOT NULL,
   gpg INT NOT NULL,
   gpv INT NOT NULL,
-  mrg INT NOT NULL, -- Che roba è???
   eta_media REAL NOT NULL,
   FOREIGN KEY (gpg) REFERENCES Giocatore(id),
   FOREIGN KEY (gpv) REFERENCES Giocatore(id)
