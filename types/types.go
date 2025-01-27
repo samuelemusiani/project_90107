@@ -26,3 +26,39 @@ type Team struct {
 	GPV             int64     `json:"gpv"`
 	EtaMedia        float64   `json:"etaMedia"`
 }
+
+type Ingaggio struct {
+	Persona int64 `json:"persona"`
+	Team    int64 `json:"team"`
+	Salario int64 `json:"salario"`
+}
+
+type Sponsor struct {
+	ID   int64  `json:"id"`
+	Nome string `json:"nome"`
+}
+
+type Sponsorizza struct {
+	Sponsor int64 `json:"sponsor"`
+	Team    int64 `json:"team"`
+	Budget  int64 `json:"budget"`
+}
+
+type Campionato struct {
+	ID         int64     `json:"id"`
+	Nome       string    `json:"nome"`
+	Luogo      string    `json:"luogo"`
+	DataInizio time.Time `json:"dataInizio"`
+	DataFine   time.Time `json:"dataFine"`
+	Tipo       string    `json:"tipo"`
+	Montepremi int64     `json:"montepremi"`
+}
+
+type Evento struct {
+	ID          int64     `json:"id"`
+	Nome        string    `json:"nome"`
+	Luogo       string    `json:"luogo"`
+	Data        time.Time `json:"data"`
+	PostiTotali int64     `json:"postiTotali"`
+	Campionato  int64     `json:"campionato"`
+}

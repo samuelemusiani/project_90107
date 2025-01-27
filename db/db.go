@@ -138,3 +138,71 @@ func Ingaggia(team string, giocatore string, salario int64) error {
 	_, err = db.Exec(string(sqlFiles), teamID, giocatoreID, salario)
 	return err
 }
+
+func InsertCoach(ing types.Ingaggio) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op03.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), ing.Persona, ing.Team, ing.Salario)
+	return err
+}
+
+func InsertSponsor(s types.Sponsor) (int64, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op04_1.sql")
+	if err != nil {
+		return 0, err
+	}
+
+	row := db.QueryRow("SELECT id FROM sponsor WHERE nome = $1", s.Nome)
+	var tmp int64
+	err = row.Scan(&tmp)
+	if err == nil {
+		return 0, errors.New("Sponsor already exists")
+	}
+
+	_, err = db.Exec(string(sqlFiles), s.Nome)
+	if err != nil {
+		return 0, err
+	}
+
+	row = db.QueryRow("SELECT id FROM sponsor WHERE nome = $1", s.Nome)
+	var id int64
+	err = row.Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, err
+}
+
+func InsertSponsorizza(s types.Sponsorizza) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op04_2.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), s.Sponsor, s.Team, s.Budget)
+	return err
+}
+
+func InsertCampionato(c types.Campionato) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op05.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), c.Nome, c.Luogo, c.DataInizio, c.DataFine, c.Tipo, c.Montepremi)
+	return err
+}
+
+func InsertEvento(e types.Evento) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op06.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), e.Nome, e.Luogo, e.Data, e.PostiTotali, e.Campionato)
+	return err
+}

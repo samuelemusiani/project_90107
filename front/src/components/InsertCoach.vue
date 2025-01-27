@@ -9,12 +9,12 @@ const nome = ref("");
 const cognome = ref("");
 const dataNascita = ref("");
 const luogoNascita = ref("");
-const username = ref("");
-const dig = ref("");
+const team = ref("");
+const salario = ref("");
 
-async function insertGiocatore() {
+async function insertCoach() {
   try {
-    const res = await fetch("/api/giocatore", {
+    const res = await fetch("/api/coach", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,13 +24,13 @@ async function insertGiocatore() {
         cognome: cognome.value,
         dataNascita: new Date(dataNascita.value).toISOString(),
         luogoNascita: luogoNascita.value,
-        username: username.value,
-        dig: new Date(dig.value).toISOString(),
+        team: team.value,
+        salario: salario.value,
       }),
     });
 
     if (!res.ok) {
-      $toast.error("Errore durante l'inserimento del giocatore");
+      $toast.error("Errore durante l'inserimento del coach");
       throw new Error("Failed to insert user");
     }
   } catch (err) {
@@ -43,7 +43,7 @@ onMounted(() => {});
 
 <template>
   <div class="greetings w-full">
-    <h3 class="font-bold text-xl">Insert giocatore</h3>
+    <h3 class="font-bold text-xl">Insert coach</h3>
 
     <form class="flex flex-col w-full gap-2" @click.prevent>
       <div>
@@ -96,30 +96,30 @@ onMounted(() => {});
 
       <div>
         <div class="label">
-          <span class="label-text">Username</span>
+          <span class="label-text">Nome Team</span>
         </div>
         <input
           type="text"
-          placeholder="Username"
-          v-model="username"
+          placeholder="Nome Team"
+          v-model="team"
           class="input input-bordered w-full"
         />
       </div>
 
       <div>
         <div class="label">
-          <span class="label-text">Data di inzio gioco</span>
+          <span class="label-text">Salario</span>
         </div>
         <input
-          type="date"
+          type="number"
           placeholder="Dig"
-          v-model="dig"
+          v-model="salario"
           class="input input-bordered w-full"
         />
       </div>
 
-      <button @click="insertGiocatore" class="btn btn-primary mt-4">
-        Insert user
+      <button @click="insertCoach" class="btn btn-primary mt-4">
+        Insert coach
       </button>
     </form>
   </div>

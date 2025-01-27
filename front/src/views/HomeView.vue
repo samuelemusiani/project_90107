@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import OP01 from "@/components/InsertGiocatore.vue";
 import OP02 from "@/components/FormareTeam.vue";
+import OP03 from "@/components/InsertCoach.vue";
+import OP04 from "@/components/InsertSponsor.vue";
+import OP05 from "@/components/InsertCampionato.vue";
+import OP06 from "@/components/InsertEvento.vue";
 import NoAction from "@/components/NoAction.vue";
 import { ref, computed, watch, onMounted } from "vue";
 
@@ -13,6 +17,14 @@ const comp = computed(() => {
       return OP01;
     case 2:
       return OP02;
+    case 3:
+      return OP03;
+    case 4:
+      return OP04;
+    case 5:
+      return OP05;
+    case 6:
+      return OP06;
     default:
       return NoAction;
   }
@@ -44,8 +56,12 @@ onMounted(() => {
           class="select select-bordered select-primary w-full"
         >
           <option value="0">Seleziona operazione</option>
-          <option value="1">Inserisci Giocatore</option>
-          <option value="2">Formare un team</option>
+          <option value="1">Inserire Giocatore</option>
+          <option value="2">Fomare un team</option>
+          <option value="3">Inserire Coach</option>
+          <option value="4">Inserire Sponsor</option>
+          <option value="5">Inserire Campionato</option>
+          <option value="6">Inserire Evento</option>
         </select>
       </div>
       <div class="shadow-lg bg-base-200 flex justify-center p-4 rounded-lg">

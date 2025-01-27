@@ -61,10 +61,8 @@ CREATE TABLE IF NOT EXISTS Evento(
   luogo TEXT NOT NULL,
   data DATE NOT NULL,
   posti_totali INT NOT NULL,
-  posti_usati INT NOT NULL,
   campionato INT NOT NULL,
-  FOREIGN KEY (campionato) REFERENCES Campionato(id),
-  CHECK (posti_usati >= 0 AND posti_usati <= posti_totali)
+  FOREIGN KEY (campionato) REFERENCES Campionato(id)
 );
 
 CREATE TABLE IF NOT EXISTS Biglietto(
