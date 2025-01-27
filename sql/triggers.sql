@@ -8,6 +8,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE TRIGGER trigger_check_max_carte
 BEFORE INSERT ON Formato
 FOR EACH ROW
@@ -23,6 +24,7 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER trigger_check_players_number
 BEFORE INSERT ON Gioca
@@ -70,6 +72,7 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER trigger_aggiorna_team_stats
 AFTER INSERT OR DELETE OR UPDATE ON Ingaggio
