@@ -106,6 +106,10 @@ Biglietto & Oggetto che permette ad uno spettatore di assistere ad un evento & &
 Elisir    & Valuta utilizzata durante le partite per piazzare carte & & Carta \\ \hline
 Torre     & Base dei giocatori, l'obbiettivo del gioco è distruggere quella dell'avversario & & Partita \\ \hline
 Ranking   & Numero di partite vinte se è riferito al giocatore, somma delle partite vinte dei giocatori del team se è riferito al team & & Parta, Giocatore, Team \\ \hline
+GPG & Giocatore più giovane & & Team \\ \hline
+GPV & Giocatore più vecchio & & Team \\ \hline
+DF & Data fundazione & & Team \\ \hline
+DIG & Data in cui il giocatore ha Iniziato a Giocare & & \\ \hline
 \end{tabularx}
 \caption{Glossario dei termini}
 \label{table_glossario_termini}
@@ -181,9 +185,9 @@ Relativamente alle leaderboards si vuole rappresentare la lista di giocatori o l
     \item Visualizzare la carta più usata in un torneo
     \item Visualizzare la carta più usata in un evento
     \item Visualizzare la carta più usata in una partita
-    \item Visualizzare numero di volte che è stata usata una carta in un torneo
-    \item Visualizzare numero di volte che è stata usata una carta in un evento
-    \item Visualizzare numero di volte che è stata usata una carta in una partita
+    \item Visualizzare numero di volte che sono state utilizzate tutte le carte in un torneo
+    \item Visualizzare numero di volte che sono state utilizzate tutte le carte in un evento
+    \item Visualizzare numero di volte che sono state utilizzate tutte le carte in una partita
     \item Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un torneo
     \item Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un evento
     \item Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in una partita
@@ -331,6 +335,32 @@ Ha & Associa una leaderboard ad un campionato & Campionato (1,1), Leaderboard (1
 \end{table}
 
 \subsection{Regole aziendali}
+
+\subsubsection{Regole di vincolo}
+\begin{enumerate}
+    \item Un mazzo è formato da esattamente 8 carte
+    \item Una partita ha esattamente due giocatori
+    \item Il tempo di una partita è compreso tra 0 e 5 minuti
+    \item L'elisir delle carte è compreso tra 1 e 9 ed è intero
+    \item I danni di una carta sono maggiori di 0
+    \item I posti usati di un evento sono maggiori o uguali a zero e sono minori o uguali ai posti totali
+    \item La data di inizio di un campionato deve essere prima della data di fine
+    \item Il budget e i salari devono essere maggiore di 0
+    \item L'elisir usato e sprecato e maggiore o uguale a 0
+    \item I danni fatti in una partita sono maggiori o uguali a zero
+    \item Il tipo del campionato può essere: "team", "giocatore"
+    \item Il tipo di torri può essere: "base", "cannone", "balestra"
+\end{enumerate}
+
+\subsubsection{Regole di derivazione}
+\begin{enumerate}
+    \item Il GPG nei team si calcola prendendo il giocatore più giovane del team
+    \item Il GPV nei team si calcola prendendo il giocatore più vecchio del team
+    \item L'età media giocatori si calcola facendo la media dell'età dei giocatori del team
+    \item Il numero di partite giocate ad un evento è il numero di partite giocate all'evento
+    \item I posti disponibile ad un evento sono i posti totali meno i posti usati
+    \item Il costo medio di elisir di un mazzo si calcola facendo la media del costo di elisir tra le sue carte
+\end{enumerate}
 
 \section{Progettazione logica}
 
@@ -548,9 +578,13 @@ Non abbiamo trovato nessun possibile accorpamento o partizionamento all'interno 
 
 
 \subsection{Normalizzazione}
+% TODO: Riguardare
 
-% TODO: Samu
+\subsubsection{Associazioni}
+Analizzando lo schema concettuale ristrutturato si nota che tutte le associazioni binarie sono in forma di Boyce Codd. Per quanto riguarda le relazioni ternarie si può notare che non presentano dipendenze non banali tra gli attributi.
 
+\subsubsection{Entità}
+Nessuna entità presenta dipendenza non banali tra i propri attributi, e quindi tutte le entità sono necessariamente in forma normale di Boyce e Codd.
 
 \subsection{Traduzione verso il modello relazionale}
 
@@ -563,14 +597,14 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
         \textbf{Entità - Relazione} & \textbf{Traduzione} \\ \hline
         Persona & Persona(\underline{ID}, Nome, Cognome, Data di nascita, Luogo di nascita) \\ \hline
         Giocatore & Giocatore(\underline{Persona}, Username, DIG) \\ \hline
-        Team & Team(\underline{ID}, Nome, Logo, DF, Stato geografico, GPG, GPV, MRG, Età media giocatori) \\ \hline
+        Team & Team(\underline{ID}, Nome, Logo, DF, Stato geografico, GPG, GPV, Età media giocatori) \\ \hline
         Sponsor & Sponsor(\underline{ID}, Nome) \\ \hline
         Campionato & Campionato(\underline{ID}, Nome, Luogo, Data inizio, Data fine, Tipo, Montepremi) \\ \hline
         Leaderboard teams & LeaderboardT(\underline{ID}, Campionato)  \\ \hline
         Leaderboard giocatori & LeaderboardG(\underline{ID}, Campionato) \\ \hline
         Evento & Evento(\underline{ID}, Nome, Luogo, Data, Posti totali, Posti usati, Campionato) \\ \hline
         Biglietto & Biglietto(\underline{ID}, Prezzo, Posto) \\ \hline
-        Partita & Partita(\underline{ID}, Vincitore, Tipo di Vittoria, Orario, Tempo, Evento) \\ \hline
+        Partita & Partita(\underline{ID}, Vincitore, Orario, Tempo, Evento) \\ \hline
         Mazzo & Mazzo(\underline{ID}) \\ \hline % TODO: Secondo me non ha senso :(
         Carta & Carta(\underline{ID}, Nome, Elisir, Danno) \\ \hline
         Ingaggio & Ingaggio(\underline{Team}, \underline{Giocatore}, Salario) \\ \hline
@@ -583,6 +617,7 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
         Formato & Formato(\underline{Mazzo}, \underline{Carta}) \\ \hline
         Formata (teams) & FormataT(\underline{Campionato}, \underline{Team}, Posizione) \\ \hline
         Formata (giocatori) & FormataG(\underline{Campionato}, \underline{Giocatore}, Posizione) \\ \hline
+        Giocata In & GiocataIn(\underline{Carta}, \underline{Partita}, volte) \\ \hline
     \end{tabularx}
     \caption{Entità-relazione e traduzione verso il modella relazionale}
     \label{table_entita_relazione_traduzione}
@@ -595,14 +630,14 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
         \textbf{Traduzione} & \textbf{Vincoli di riferimento} \\ \hline
         Persona(\underline{ID}, Nome, Cognome, Data di nascita, Luogo di nascita) & - \\ \hline
         Giocatore(\underline{Persona}, Username, DIG) & Persona $\xrightarrow{}$ Persona.ID \\ \hline
-        Team(\underline{ID}, Nome, Logo, DF, Stato geografico, GPG, GPV, MRG, Età media giocatori) & GPG $\xrightarrow{}$ Giocatore.ID, GPV $\xrightarrow{}$ Giocatore.ID \\ \hline
+        Team(\underline{ID}, Nome, Logo, DF, Stato geografico, GPG, GPV, Età media giocatori) & GPG $\xrightarrow{}$ Giocatore.ID, GPV $\xrightarrow{}$ Giocatore.ID \\ \hline
         Sponsor(\underline{ID}, Nome) & - \\ \hline
         Campionato(\underline{ID}, Nome, Luogo, Data inizio, Data fine, Tipo, Montepremi) & - \\ \hline
         LeaderboardT(\underline{ID}, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
         LeaderboardG(\underline{ID}, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
         Evento(\underline{ID}, Nome, Luogo, Data, Posti totali, Posti usati, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
         Biglietto(\underline{ID}, Prezzo, Posto) & - \\ \hline
-        Partita(\underline{ID}, Vincitore, Tipo di Vittoria, Orario, Tempo, Evento) & Vincitore $\xrightarrow{}$ Giocatore.ID, Evento $\xrightarrow{}$ Evento.ID \\ \hline
+        Partita(\underline{ID}, Vincitore, Orario, Tempo, Evento) & Vincitore $\xrightarrow{}$ Giocatore.ID, Evento $\xrightarrow{}$ Evento.ID \\ \hline
         Mazzo(\underline{ID}) & - \\ \hline % TODO: Secondo me non ha senso :(
         Carta(\underline{ID}, Nome, Elisir, Danno) & \\ \hline
         Ingaggio(\underline{Team}, \underline{Giocatore}, Salario) & Team $\xrightarrow{}$ Team.ID, Giocatore $\xrightarrow{}$ Giocatore.Persona \\ \hline % È giusto Giocatore.Persona?
@@ -615,6 +650,7 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
         Formato(\underline{Mazzo}, \underline{Carta}) & Mazzo $\xrightarrow{}$ Mazzo.ID, Carta $\xrightarrow{}$ Carta.ID \\ \hline
         FormataT(\underline{Campionato}, \underline{Team}, Posizione) & Campionato $\xrightarrow{}$ Campionato.ID, Team $\xrightarrow{}$ Team.ID \\ \hline
         FormataG(\underline{Campionato}, \underline{Giocatore}, Posizione) & Campionato $\xrightarrow{}$ Campionato.ID, Giocatore $\xrightarrow{}$ Giocatore.Persona \\ \hline
+        GiocataIn(\underline{Carta}, \underline{Partita}, volte) & Carta $\xrightarrow{}$ Carta.ID, Partita $\xrightarrow{}$ Partita.ID \\ \hline
     \end{tabularx}
     \caption{Traduzione e vincoli di riferimento verso il modella relazionale}
     \label{table_traduzione_vincoli_riferimento}
@@ -627,7 +663,8 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
 \begin{lstlisting}[ language=SQL,
                     deletekeywords={IDENTITY},
                     deletekeywords={[2]INT},
-                    morekeywords={clustered},
+                    deletekeywords={[2]DATE},
+                    morekeywords={REFERENCES},
                     framesep=8pt,
                     xleftmargin=40pt,
                     framexleftmargin=40pt,
@@ -654,10 +691,9 @@ CREATE TABLE IF NOT EXISTS Team(
   logo BYTEA,
   data_fondazione DATE NOT NULL,
   stato_geografico TEXT NOT NULL,
-  gpg INT NOT NULL,
-  gpv INT NOT NULL,
-  mrg INT NOT NULL, -- Che roba e'???
-  eta_media REAL NOT NULL,
+  gpg INT NOT NULL DEFAULT 0,
+  gpv INT NOT NULL DEFAULT 0,
+  eta_media REAL NOT NULL DEFAULT 0,
   FOREIGN KEY (gpg) REFERENCES Giocatore(id),
   FOREIGN KEY (gpv) REFERENCES Giocatore(id)
 );
@@ -675,6 +711,7 @@ CREATE TABLE IF NOT EXISTS Campionato(
   data_fine DATE NOT NULL,
   tipo TEXT NOT NULL,
   montepremi INT NOT NULL,
+  CHECK (tipo = 'team' OR tipo = 'giocatore')
 );
 
 CREATE TABLE IF NOT EXISTS LeaderboardT(
@@ -697,28 +734,29 @@ CREATE TABLE IF NOT EXISTS Evento(
   posti_totali INT NOT NULL,
   posti_usati INT NOT NULL,
   campionato INT NOT NULL,
-  FOREIGN KEY (campionato) REFERENCES Campionato(id)
+  FOREIGN KEY (campionato) REFERENCES Campionato(id),
+  CHECK (posti_usati >= 0 AND posti_usati <= posti_totali)
 );
 
 CREATE TABLE IF NOT EXISTS Biglietto(
   id SERIAL PRIMARY KEY,
   prezzo REAL NOT NULL,
-  posto INT NOT NULL,
+  posto INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Partita(
   id SERIAL PRIMARY KEY,
   vincitore INT NOT NULL,
-  tipo_vittoria TEXT NOT NULL,
   orario TIME NOT NULL,
   tempo INT NOT NULL,
   evento INT NOT NULL,
   FOREIGN KEY (vincitore) REFERENCES Giocatore(id),
-  FOREIGN KEY (evento) REFERENCES Evento(id)
+  FOREIGN KEY (evento) REFERENCES Evento(id),
+  CHECK (tempo > 0 AND tempo <= 300)
 );
 
 CREATE TABLE IF NOT EXISTS Mazzo(
-  id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS Carta(
@@ -726,6 +764,7 @@ CREATE TABLE IF NOT EXISTS Carta(
   nome TEXT NOT NULL,
   elisir INT NOT NULL,
   danni INT NOT NULL,
+  CHECK (elisir > 0 AND elisir <= 9 AND danni > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Ingaggio(
@@ -734,7 +773,8 @@ CREATE TABLE IF NOT EXISTS Ingaggio(
   salario INT NOT NULL,
   PRIMARY KEY (team, giocatore),
   FOREIGN KEY (team) REFERENCES Team(id),
-  FOREIGN KEY (giocatore) REFERENCES Giocatore(id)
+  FOREIGN KEY (giocatore) REFERENCES Giocatore(id),
+  CHECK (salario > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Allena(
@@ -743,7 +783,8 @@ CREATE TABLE IF NOT EXISTS Allena(
   salario INT NOT NULL,
   PRIMARY KEY (persona, team),
   FOREIGN KEY (persona) REFERENCES Persona(id),
-  FOREIGN KEY (team) REFERENCES Team(id)
+  FOREIGN KEY (team) REFERENCES Team(id),
+  CHECK (salario > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Sponsorizza(
@@ -752,7 +793,8 @@ CREATE TABLE IF NOT EXISTS Sponsorizza(
   budget INT NOT NULL,
   PRIMARY KEY (sponsor, team),
   FOREIGN KEY (sponsor) REFERENCES Sponsor(id),
-  FOREIGN KEY (team) REFERENCES Team(id)
+  FOREIGN KEY (team) REFERENCES Team(id),
+  CHECK (budget > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Assiste(
@@ -762,6 +804,7 @@ CREATE TABLE IF NOT EXISTS Assiste(
   PRIMARY KEY (persona, evento),
   FOREIGN KEY (persona) REFERENCES Persona(id),
   FOREIGN KEY (evento) REFERENCES Evento(id),
+  FOREIGN KEY (biglietto) REFERENCES Biglietto(id)
 );
 
 CREATE TABLE IF NOT EXISTS Gioca(
@@ -775,7 +818,9 @@ CREATE TABLE IF NOT EXISTS Gioca(
   PRIMARY KEY (giocatore, partita),
   FOREIGN KEY (giocatore) REFERENCES Giocatore(id),
   FOREIGN KEY (partita) REFERENCES Partita(id),
-  FOREIGN KEY (mazzo) REFERENCES Mazzo(id)
+  FOREIGN KEY (mazzo) REFERENCES Mazzo(id),
+  CHECK (elisir_usato >= 0 AND elisir_sprecato >= 0 AND danni_fatti >= 0),
+  CHECK (tipo_torri = 'base' OR tipo_torri = 'cannone' OR tipo_torri = 'balestra')
 );
 
 CREATE TABLE IF NOT EXISTS Commenta(
@@ -812,6 +857,117 @@ CREATE TABLE IF NOT EXISTS FormataG(
   FOREIGN KEY (campionato) REFERENCES Campionato(id),
   FOREIGN KEY (giocatore) REFERENCES Giocatore(id)
 );
+
+CREATE TABLE IF NOT EXISTS GiocataIn(
+  carta INT NOT NULL,
+  partita INT NOT NULL,
+  volte INT NOT NULL,
+  PRIMARY KEY (carta, partita),
+  FOREIGN KEY (carta) REFERENCES Carta(id),
+  FOREIGN KEY (partita) REFERENCES Partita(id),
+  CHECK (volte > 0)
+);
+\end{lstlisting}
+
+\subsection{Triggers}
+Alcuni vincoli aziendali (1 e 2) non era possibile esprimerli tramite dei \texttt{CHECK} SQL. Abiamo quindi deciso di introdurre dei \texttt{TRIGGER}:
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+CREATE OR REPLACE FUNCTION check_max_carte()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT COUNT(*) FROM Formato WHERE mazzo = NEW.mazzo) >= 8 THEN
+    RAISE EXCEPTION 'Un mazzo puo contenere al massimo 8 carte.';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_check_max_carte
+BEFORE INSERT ON Formato
+FOR EACH ROW
+EXECUTE FUNCTION check_max_carte();
+
+
+CREATE OR REPLACE FUNCTION check_players_number()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT COUNT(*) FROM Gioca WHERE partita = NEW.partita) >= 2 THEN
+    RAISE EXCEPTION 'Una partita puo contenere al massimo 2 giocatori.';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_check_players_number
+BEFORE INSERT ON Gioca
+FOR EACH ROW
+EXECUTE FUNCTION check_players_number();
+\end{lstlisting}
+
+A seguito dell'eliminazione delle ridondanze abbiamo deciso di mantenere la ridondanza su GPG, GPV ed Età media nei team. Per semplificare il calcolo abbiamo deciso di implementare un ulteriore trigger:
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+CREATE OR REPLACE FUNCTION aggiorna_team_stats()
+RETURNS TRIGGER AS $$
+DECLARE
+  giocatore_piu_giovane INT;
+  giocatore_piu_vecchio INT;
+  eta_media_team REAL;
+BEGIN
+  -- Il giocatore piu giovane
+  SELECT i.giocatore
+  INTO giocatore_piu_giovane
+  FROM Ingaggio i
+  JOIN Giocatore g ON i.giocatore = g.id
+  WHERE i.team = NEW.team
+  ORDER BY g.dig DESC
+  LIMIT 1;
+
+  -- Il giocatore piu vecchio
+  SELECT i.giocatore
+  INTO giocatore_piu_vecchio
+  FROM Ingaggio i
+  JOIN Giocatore g ON i.giocatore = g.id
+  WHERE i.team = NEW.team
+  ORDER BY g.dig ASC
+  LIMIT 1;
+
+  -- Eta media
+  SELECT AVG(DATE_PART('year', AGE(g.dig)))::REAL
+  INTO eta_media_team
+  FROM Ingaggio i
+  JOIN Giocatore g ON i.giocatore = g.id
+  WHERE i.team = NEW.team;
+
+  UPDATE Team
+  SET gpg = giocatore_piu_giovane,
+      gpv = giocatore_piu_vecchio,
+      eta_media = COALESCE(eta_media_team, 0)
+  WHERE id = NEW.team;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_aggiorna_team_stats
+AFTER INSERT OR DELETE OR UPDATE ON Ingaggio
+FOR EACH ROW
+EXECUTE FUNCTION aggiorna_team_stats();
 \end{lstlisting}
 
 \subsection{Codifica delle operazioni}
@@ -820,47 +976,564 @@ CREATE TABLE IF NOT EXISTS FormataG(
 \begin{lstlisting}[ language=SQL,
                     deletekeywords={IDENTITY},
                     deletekeywords={[2]INT},
-                    morekeywords={clustered},
+                    morekeywords={REFERENCES},
                     framesep=8pt,
                     xleftmargin=40pt,
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-INSERT INTO Persona VALUES(...);
-INSERT INTO Giocatore VALUES(...);
+INSERT INTO Persona(nome, cognome, data_nascita, luogo_nascita) VALUES(...);
+INSERT INTO Giocatore(id, username, dig) VALUES(...);
 \end{lstlisting}
-\subsubsection{Formare un nuovo team}
-\subsubsection{Inserire un nuovo coach}
-\subsubsection{Inserire un nuovo sponsor}
-\subsubsection{Inserire un nuovo campionato}
-\subsubsection{Inserire un nuovo evento}
-\subsubsection{Inserire una nuova partita}
-\subsubsection{Inserire un nuovo mazzo}
-\subsubsection{Inserire una nuova carta}
-\subsubsection{Erogare un biglietto}
-\subsubsection{Inserire un commentatore}
-\subsubsection{Visualizzare la classifica del campionato}
-\subsubsection{Visualizzare la carta più usata in un torneo}
-\subsubsection{Visualizzare la carta più usata in un evento}
-\subsubsection{Visualizzare la carta più usata in una partita}
-\subsubsection{Visualizzare numero di volte che è stata usata una carta in un torneo}
-\subsubsection{Visualizzare numero di volte che è stata usata una carta in un evento}
-\subsubsection{Visualizzare numero di volte che è stata usata una carta in una partita}
-\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un torneo}
-\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un evento}
-\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in una partita}
-\subsubsection{Visualizzare il mazzo più usato in un torneo}
-\subsubsection{Visualizzare il mazzo più usato in un evento}
-\subsubsection{Visualizzare il mazzo più efficace usato in un torneo}
-\subsubsection{Visualizzare il mazzo più efficace usato in un evento}
-\subsubsection{Visualizzare il tipo di torri più usato in un torneo}
-\subsubsection{Visualizzare il tipo di torri più usato in un evento}
-\subsubsection{Visualizzare biglietti venduti per un torneo }
-\subsubsection{Visualizzare biglietti venduti per un evento  }
-\subsubsection{Visualizzare il cronista di una partita}
-\subsubsection{Visualizzare team (coach, sponsor, giocatore più giovane, più vecchio, età media, ecc.)}
-\subsubsection{Cambiare team ad un giocatore}
 
+\subsubsection{Formare un nuovo team}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+-- gpg, gpv ed eta_media sono di default a zero
+INSERT INTO Team(nome, logo, data_fonazione, stato_geografico) VALUES(...);
+-- per ogni giocatore nel team
+INSERT INTO Ingaggio(team, giocatore, salario) VALUES(...);
+-- gpg, gpv ed eta_media nel team vengono calcolati in automatico dal trigger
+\end{lstlisting}
+
+\subsubsection{Inserire un nuovo coach}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Allena(persona, team, salario) VALUES(...);
+\end{lstlisting}
+
+\subsubsection{Inserire un nuovo sponsor}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Sponsor(nome) VALUES(...);
+INSERT INTO Sponsorizza(sponsor, team, budget) VALUES(...);
+\end{lstlisting}
+
+\subsubsection{Inserire un nuovo campionato}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Campionato(nome, luogo, data_inizio, data_fine, tipo, montepremi) VALUES(...);
+\end{lstlisting}
+
+\subsubsection{Inserire un nuovo evento}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Evento(nome, luogo, data, posti_totali, posti_usati, campionato) VALUES(...);
+\end{lstlisting}
+
+\subsubsection{Inserire una nuova partita}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Partita(vincitore, orario, tempo, evento);
+-- Per entrambi i giocatori
+INSET INTO Gioca(giocatore, partita, mazzo, elisir_usato, elisir_sprecato, danni_fatti, tipo_torri) VALUES(...);
+\end{lstlisting}
+
+\subsubsection{Inserire un nuovo mazzo}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Mazzo DEFAULT VALUES;
+-- Per formare il mazzo bisogna per ogni carta del mazzo:
+INSERT INTO Formato(mazzo, carta) VALUES(...);
+\end{lstlisting}
+
+\subsubsection{Inserire una nuova carta}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Carta(nome, elisir, danni) VALUES(...);
+\end{lstlisting}
+
+\subsubsection{Erogare un biglietto}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Biglietto(prezzo,posto);
+INSERT INTO Assiste(persona, evento, biglietto) VALUES(...)
+\end{lstlisting}
+
+\subsubsection{Inserire un commentatore}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+INSERT INTO Persona(nome, cognome, data_nascita, luogo_nascita) VALUES(...);
+INSERT INTO Commenta(persona, partita, lingua) VALUES(...);
+\end{lstlisting}
+
+\subsubsection{Visualizzare la classifica del campionato}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT posizione, team
+FROM FormataT
+JOIN ON Team
+WHERE Team.id = team AND campionato = $1
+ORDER BY posizione
+
+UNION ALL
+
+SELECT posizione, team
+FROM FormataG
+JOIN ON Giocatore
+WHERE Giocatore.id = giocatore AND campionato = $1
+ORDER BY posizione
+\end{lstlisting}
+
+\subsubsection{Visualizzare la carta più usata in un torneo}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT SUM(volte) as sumVolte, carta
+FROM GiocataIn
+WHERE partita IN (
+        SELECT Partita.id
+        FROM Partita
+        WHERE Partita.evento IN (
+            SELECT Evento.id
+            FROM Evento
+            WHERE Evento.campionato = $1
+        )
+    )
+ORDER BY sumVolte DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare la carta più usata in un evento}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT SUM(volte) as sumVolte, carta
+FROM GiocataIn
+WHERE partita IN (
+        SELECT Partita.id
+        FROM Partita
+        WHERE Partita.evento = $1
+    )
+ORDER BY sumVolte DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare la carta più usata in una partita}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT carta
+FROM GiocataIn
+WHERE partita = $1
+ORDER BY volte DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare numero di volte che sono state usate tutte le carte in un torneo}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT nome, COALESCE(GiocataIn.volte, 0)
+FROM Carta
+LEFT JOIN GiocataIn
+WHERE id = GiocataIn.carta 
+AND partita IN (
+    SELECT * FROM Partita WHERE Partita.evento IN (
+        SELECT * FROM Evento WHERE Evento.campionato = $1
+    )
+)
+\end{lstlisting}
+
+\subsubsection{Visualizzare numero di volte che sono state usate tutte le carte in un evento}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT nome, COALESCE(GiocataIn.volte, 0)
+FROM Carta
+LEFT JOIN GiocataIn
+WHERE id = GiocataIn.carta 
+AND partita IN (
+    SELECT * FROM Partita WHERE Partita.evento = $1
+)
+\end{lstlisting}
+
+\subsubsection{Visualizzare numero di volte che sono state usate tutte le carte in un partita}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT nome, COALESCE(GiocataIn.volte, 0)
+FROM Carta
+LEFT JOIN GiocataIn
+WHERE id = GiocataIn.carta AND partita = $1
+\end{lstlisting}
+
+\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un torneo}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+-- Assumendo che $1 sia l'ID del giocatore e $2 l'ID del campionato
+SELECT SUM(I.elisir_usato), SUM(I.elisir_sprecato), 
+    SUM(I.danni_fatti), SUM(T.danni_fatti) AS danni_subiti
+FROM Gioca I, Gioca T
+WHERE I.giocatore = $1 AND I.partita = T.partita
+     AND T.giocatore != $1 ADN I.partita IN (
+        SELECT * FROM Partita WHERE Partita.evento IN (
+            SELECT * FROM Evento WHERE Evento.campinato = $2
+        )
+     )
+\end{lstlisting}
+
+\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un evento}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+-- Assumendo che $1 sia l'ID del giocatore e $2 l'ID dell'evento
+SELECT SUM(I.elisir_usato), SUM(I.elisir_sprecato), 
+    SUM(I.danni_fatti), SUM(T.danni_fatti) AS danni_subiti
+FROM Gioca I, Gioca T
+WHERE I.giocatore = $1 AND I.partita = T.partita
+     AND T.giocatore != $1 ADN I.partita IN (
+        SELECT id FROM Partita WHERE Partita.evento = $2
+     )
+\end{lstlisting}
+
+\subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in una partita}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+-- Assumendo che $1 sia l'ID del giocatore e $2 l'ID della partita
+SELECT I.elisir_usato, I.elisir_sprecato, I.danni_fatti, T.danni_fatti AS danni_subiti
+FROM Gioca I, Gioca T
+WHERE I.giocatore = $1 AND I.partita = $2 AND
+    T.partita = $2 AND T.giocatore != $1
+\end{lstlisting}
+
+\subsubsection{Visualizzare il mazzo più usato in un torneo}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT mazzo, COUNT(mazzo) AS mazzoCount
+FROM Gioca
+WHERE partita IN (
+    SELECT id FROM Partita WHERE Partita.evento IN (
+        SELECT id FROM Evento WHERE Evento.campionato = $1
+    )
+)
+GROUP BY mazzo
+ORDER BY mazzoCount DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare il mazzo più usato in un evento}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT mazzo, COUNT(mazzo) AS mazzoCount
+FROM Gioca
+WHERE partita IN (
+    SELECT id FROM Partita WHERE Partita.evento = $1
+)
+GROUP BY mazzo
+ORDER BY mazzoCount DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare il mazzo più efficace usato in un torneo}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT COUNT(*) as mazzoVolte
+FROM Gioca
+JOIN Parita ON Gioca.giocatore = Partita.Vincitore
+WHERE Partita.evento IN (
+    SELECT id FROM Evento WHERE Evento.campionato = $1
+)
+GROUP BY mazzo
+ORDER BY mazzoVolte DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare il mazzo più efficace usato in un evento}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT COUNT(*) as mazzoVolte
+FROM Gioca
+JOIN Parita ON Gioca.giocatore = Partita.Vincitore
+WHERE Partita.evento = $1
+GROUP BY mazzo
+ORDER BY mazzoVolte DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare il tipo di torri più usato in un torneo}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT COUNT(*) as countTorri
+FROM Gioca
+WHERE Partita.evento IN (
+    SELECT id FROM Evento WHERE Evento.campionato = $1
+)
+GROUP BY tipo_torri
+ORDER BY countTorri DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare il tipo di torri più usato in un evento}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT COUNT(*) as countTorri
+FROM Gioca
+WHERE Partita.evento = $1
+GROUP BY tipo_torri
+ORDER BY countTorri DESC
+LIMIT 1
+\end{lstlisting}
+
+\subsubsection{Visualizzare biglietti venduti per un torneo}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT COUNT(*)
+FROM Assiste
+WHERE Assiste.evento IN (
+    SELECT id FROM Evento WHERE Evento.campionato = $1
+)
+GROUP BY biglietto
+\end{lstlisting}
+
+\subsubsection{Visualizzare biglietti venduti per un evento}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT COUNT(*)
+FROM Assiste
+WHERE Assiste.evento = $1
+GROUP BY biglietto
+\end{lstlisting}
+
+\subsubsection{Visualizzare il cronista di una partita}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT nome, cognome, data_nascita, luogo_nascita
+FROM Persona
+JOIN Commenta ON Persona.id = Commenta.persona
+WHERE Commenta.partita = $1
+\end{lstlisting}
+
+\subsubsection{Visualizzare team (coach, sponsor, giocatore più giovane, più vecchio, età media, ecc.)}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+SELECT nome, logo, data_fondazione, stato_geografico, gpg, gpv, eta_media, Persona.nome as coach, Sponsor.nome as sponsor
+FROM Team
+JOIN Allena ON Team.id = Allena.team
+JOIN Persona ON Persona.id = Allena.persona
+JOIN Sponsorizza ON Team.id = Sponsorizza.team
+JOIN Sponsor ON Sponsorizza.sponsor = Sponsor.id
+WHERE Team.id = $1
+\end{lstlisting}
+
+\subsubsection{Cambiare team ad un giocatore}
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+-- Assumendo $1 come ID del giocatore a cui si vule cambiare team, $2 ID del nuovo team e $3 il nuovo salario
+UPDATE Ingaggio
+SET team = $2, salario = $3
+WHERE giocatore = $1
+\end{lstlisting}
 
 \section{Testing}
 
