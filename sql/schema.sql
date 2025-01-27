@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS Team(
   logo BYTEA,
   data_fondazione DATE NOT NULL,
   stato_geografico TEXT NOT NULL,
-  gpg INT NOT NULL,
-  gpv INT NOT NULL,
-  eta_media REAL NOT NULL,
+  gpg INT NOT NULL DEFAULT 0,
+  gpv INT NOT NULL DEFAULT 0,
+  eta_media REAL NOT NULL DEFAULT 0,
   FOREIGN KEY (gpg) REFERENCES Giocatore(id),
   FOREIGN KEY (gpv) REFERENCES Giocatore(id)
 );
@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS Campionato(
   data_fine DATE NOT NULL,
   tipo TEXT NOT NULL,
   montepremi INT NOT NULL,
+  CHECK (tipo = 'team' OR tipo = 'giocatore'),
+  CHECK (data_inizio < data_fine)
 );
 
 CREATE TABLE IF NOT EXISTS LeaderboardT(
@@ -61,13 +63,14 @@ CREATE TABLE IF NOT EXISTS Evento(
   posti_totali INT NOT NULL,
   posti_usati INT NOT NULL,
   campionato INT NOT NULL,
-  FOREIGN KEY (campionato) REFERENCES Campionato(id)
+  FOREIGN KEY (campionato) REFERENCES Campionato(id),
+  CHECK (posti_usati >= 0 AND posti_usati <= posti_totali)
 );
 
 CREATE TABLE IF NOT EXISTS Biglietto(
   id SERIAL PRIMARY KEY,
   prezzo REAL NOT NULL,
-  posto INT NOT NULL,
+  posto INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Partita(
@@ -77,11 +80,12 @@ CREATE TABLE IF NOT EXISTS Partita(
   tempo INT NOT NULL,
   evento INT NOT NULL,
   FOREIGN KEY (vincitore) REFERENCES Giocatore(id),
-  FOREIGN KEY (evento) REFERENCES Evento(id)
+  FOREIGN KEY (evento) REFERENCES Evento(id),
+  CHECK (tempo > 0 AND tempo <= 300)
 );
 
 CREATE TABLE IF NOT EXISTS Mazzo(
-  id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS Carta(
@@ -89,6 +93,7 @@ CREATE TABLE IF NOT EXISTS Carta(
   nome TEXT NOT NULL,
   elisir INT NOT NULL,
   danni INT NOT NULL,
+  CHECK (elisir > 0 AND elisir <= 9 AND danni > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Ingaggio(
@@ -97,7 +102,8 @@ CREATE TABLE IF NOT EXISTS Ingaggio(
   salario INT NOT NULL,
   PRIMARY KEY (team, giocatore),
   FOREIGN KEY (team) REFERENCES Team(id),
-  FOREIGN KEY (giocatore) REFERENCES Giocatore(id)
+  FOREIGN KEY (giocatore) REFERENCES Giocatore(id),
+  CHECK (salario > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Allena(
@@ -106,7 +112,8 @@ CREATE TABLE IF NOT EXISTS Allena(
   salario INT NOT NULL,
   PRIMARY KEY (persona, team),
   FOREIGN KEY (persona) REFERENCES Persona(id),
-  FOREIGN KEY (team) REFERENCES Team(id)
+  FOREIGN KEY (team) REFERENCES Team(id),
+  CHECK (salario > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Sponsorizza(
@@ -115,7 +122,8 @@ CREATE TABLE IF NOT EXISTS Sponsorizza(
   budget INT NOT NULL,
   PRIMARY KEY (sponsor, team),
   FOREIGN KEY (sponsor) REFERENCES Sponsor(id),
-  FOREIGN KEY (team) REFERENCES Team(id)
+  FOREIGN KEY (team) REFERENCES Team(id),
+  CHECK (budget > 0)
 );
 
 CREATE TABLE IF NOT EXISTS Assiste(
@@ -125,6 +133,7 @@ CREATE TABLE IF NOT EXISTS Assiste(
   PRIMARY KEY (persona, evento),
   FOREIGN KEY (persona) REFERENCES Persona(id),
   FOREIGN KEY (evento) REFERENCES Evento(id),
+  FOREIGN KEY (biglietto) REFERENCES Biglietto(id)
 );
 
 CREATE TABLE IF NOT EXISTS Gioca(
@@ -138,7 +147,9 @@ CREATE TABLE IF NOT EXISTS Gioca(
   PRIMARY KEY (giocatore, partita),
   FOREIGN KEY (giocatore) REFERENCES Giocatore(id),
   FOREIGN KEY (partita) REFERENCES Partita(id),
-  FOREIGN KEY (mazzo) REFERENCES Mazzo(id)
+  FOREIGN KEY (mazzo) REFERENCES Mazzo(id),
+  CHECK (elisir_usato >= 0 AND elisir_sprecato >= 0 AND danni_fatti >= 0),
+  CHECK (tipo_torri = 'base' OR tipo_torri = 'cannone' OR tipo_torri = 'balestra')
 );
 
 CREATE TABLE IF NOT EXISTS Commenta(
@@ -174,4 +185,14 @@ CREATE TABLE IF NOT EXISTS FormataG(
   PRIMARY KEY (campionato, giocatore),
   FOREIGN KEY (campionato) REFERENCES Campionato(id),
   FOREIGN KEY (giocatore) REFERENCES Giocatore(id)
+);
+
+CREATE TABLE IF NOT EXISTS GiocataIn(
+  carta INT NOT NULL,
+  partita INT NOT NULL,
+  volte INT NOT NULL,
+  PRIMARY KEY (carta, partita),
+  FOREIGN KEY (carta) REFERENCES Carta(id),
+  FOREIGN KEY (partita) REFERENCES Partita(id),
+  CHECK (volte > 0)
 );
