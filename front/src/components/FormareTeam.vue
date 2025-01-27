@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useToast } from 'vue-toast-notification'
-import 'vue-toast-notification/dist/theme-sugar.css';
+import { useToast } from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-sugar.css";
 
-const $toast = useToast()
+const $toast = useToast();
 
 const nome = ref("");
 const logo = ref("");
@@ -30,7 +30,7 @@ async function creaTeam() {
     });
 
     if (!res.ok) {
-      $toast.error('Errore durante l\'inserimento del giocatore')
+      $toast.error("Errore durante l'inserimento del giocatore");
       throw new Error("Failed to insert user");
     }
   } catch (err) {
@@ -53,7 +53,7 @@ async function ingaggiaGiocatore() {
     });
 
     if (!res.ok) {
-      $toast.error('Errore durante l\'inserimento del giocatore')
+      $toast.error("Errore durante l'inserimento del giocatore");
       throw new Error("Failed to insert user");
     }
   } catch (err) {
@@ -61,8 +61,7 @@ async function ingaggiaGiocatore() {
   }
 }
 
-onMounted(() => {
-});
+onMounted(() => {});
 </script>
 
 <template>
@@ -75,33 +74,53 @@ onMounted(() => {
           <div class="label">
             <span class="label-text">Nome</span>
           </div>
-          <input type="text" placeholder="Nome" v-model="nome" class="input input-bordered w-full" />
+          <input
+            type="text"
+            placeholder="Nome"
+            v-model="nome"
+            class="input input-bordered w-full"
+          />
         </div>
 
         <div>
           <div class="label">
             <span class="label-text">Logo</span>
           </div>
-          <input type="file" placeholder="Logo" disabled class="file-input file-input-bordered w-full" />
+          <input
+            type="file"
+            placeholder="Logo"
+            disabled
+            class="file-input file-input-bordered w-full"
+          />
         </div>
 
         <div>
           <div class="label">
             <span class="label-text">Data di fondazione</span>
           </div>
-          <input type="date" placeholder="Data di fondazione" v-model="dataFondazione"
-            class="input input-bordered w-full" />
+          <input
+            type="date"
+            placeholder="Data di fondazione"
+            v-model="dataFondazione"
+            class="input input-bordered w-full"
+          />
         </div>
 
         <div>
           <div class="label">
             <span class="label-text">Stato geografico</span>
           </div>
-          <input type="text" placeholder="Stato geografico" v-model="statoGeografico"
-            class="input input-bordered w-full" />
+          <input
+            type="text"
+            placeholder="Stato geografico"
+            v-model="statoGeografico"
+            class="input input-bordered w-full"
+          />
         </div>
 
-        <button @click="creaTeam" class="btn btn-primary mt-2">Crea team</button>
+        <button @click="creaTeam" class="btn btn-primary mt-2">
+          Crea team
+        </button>
       </form>
 
       <div class="divider"></div>
@@ -113,24 +132,41 @@ onMounted(() => {
           <div class="label">
             <span class="label-text">Nome team</span>
           </div>
-          <input type="text" placeholder="Team" v-model="team" class="input input-bordered w-full" />
+          <input
+            type="text"
+            placeholder="Team"
+            v-model="team"
+            class="input input-bordered w-full"
+          />
         </div>
 
         <div>
           <div class="label">
             <span class="label-text">Username giocatore</span>
           </div>
-          <input type="text" placeholder="Giocatore" v-model="giocatore" class="input input-bordered w-full" />
+          <input
+            type="text"
+            placeholder="Giocatore"
+            v-model="giocatore"
+            class="input input-bordered w-full"
+          />
         </div>
 
         <div>
           <div class="label">
             <span class="label-text">Salario</span>
           </div>
-          <input type="number" placeholder="Salario" v-model="salario" class="input input-bordered w-full" />
+          <input
+            type="number"
+            placeholder="Salario"
+            v-model="salario"
+            class="input input-bordered w-full"
+          />
         </div>
 
-        <button @click="ingaggiaGiocatore" class="btn btn-primary mt-2">Crea team</button>
+        <button @click="ingaggiaGiocatore" class="btn btn-primary mt-2">
+          Crea team
+        </button>
       </form>
     </div>
   </div>
