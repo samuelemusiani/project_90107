@@ -27,6 +27,19 @@ type Team struct {
 	EtaMedia        float64   `json:"etaMedia"`
 }
 
+type ReturnTeam struct {
+	ID              int64     `json:"id"`
+	Nome            string    `json:"nome"`
+	Logo            []byte    `json:"logo"`
+	DataFondazione  time.Time `json:"dataFondazione"`
+	StatoGeografico string    `json:"statoGeografico"`
+	GPG             string    `json:"gpg"`
+	GPV             string    `json:"gpv"`
+	EtaMedia        float64   `json:"etaMedia"`
+	Coach           string    `json:"coach"`
+	Sponsor         string    `json:"sponsor"`
+}
+
 type Ingaggio struct {
 	Persona int64 `json:"persona"`
 	Team    int64 `json:"team"`

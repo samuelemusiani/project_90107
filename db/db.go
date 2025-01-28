@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"time"
 
 	"samuelemusiani/project_90107/config"
 	"samuelemusiani/project_90107/types"
@@ -205,4 +206,90 @@ func InsertEvento(e types.Evento) error {
 
 	_, err = db.Exec(string(sqlFiles), e.Nome, e.Luogo, e.Data, e.PostiTotali, e.Campionato)
 	return err
+}
+
+func UpdateIngaggio(giocatore string, newteam string, salario int64) error {
+
+	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", newteam)
+	var teamID string
+	err := row.Scan(&teamID)
+	if err != nil {
+		return errors.New("Team not found")
+	}
+
+	row = db.QueryRow("SELECT id FROM Giocatore WHERE username = $1", giocatore)
+	var giocatoreID string
+	err = row.Scan(&giocatoreID)
+	if err != nil {
+		return errors.New("Giocatore not found")
+	}
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op32.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), giocatoreID, teamID, salario)
+	return err
+}
+
+func ViewTeam(team string) (*types.ReturnTeam, error) {
+	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", team)
+	var teamID string
+	err := row.Scan(&teamID)
+	if err != nil {
+		return nil, errors.New("Team not found")
+	}
+
+	var teamstruct struct {
+		ID              int64     `json:"id"`
+		Nome            string    `json:"nome"`
+		Logo            []byte    `json:"logo"`
+		DataFondazione  time.Time `json:"dataFondazione"`
+		StatoGeografico string    `json:"statoGeografico"`
+		GPG             int64     `json:"gpg"`
+		GPV             int64     `json:"gpv"`
+		EtaMedia        float64   `json:"etaMedia"`
+		Coach           string    `json:"coach"`
+		Sponsor         string    `json:"sponsor"`
+	}
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op31.sql")
+	if err != nil {
+		return nil, err
+	}
+
+	row = db.QueryRow(string(sqlFiles), teamID)
+
+	err = row.Scan(&teamstruct.Nome, &teamstruct.Logo, &teamstruct.DataFondazione, &teamstruct.StatoGeografico, &teamstruct.GPG, &teamstruct.GPV, &teamstruct.EtaMedia, &teamstruct.Coach, &teamstruct.Sponsor)
+	if err != nil {
+		return nil, err
+	}
+
+	var gpg, gpv string
+
+	row = db.QueryRow("SELECT username FROM giocatore WHERE id = $1", teamstruct.GPG)
+	err = row.Scan(&gpg)
+	if err != nil {
+		return nil, err
+	}
+
+	row = db.QueryRow("SELECT username FROM giocatore WHERE id = $1", teamstruct.GPV)
+	err = row.Scan(&gpv)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.ReturnTeam{
+		ID:              teamstruct.ID,
+		Nome:            teamstruct.Nome,
+		Logo:            teamstruct.Logo,
+		DataFondazione:  teamstruct.DataFondazione,
+		StatoGeografico: teamstruct.StatoGeografico,
+		GPG:             gpg,
+		GPV:             gpv,
+		EtaMedia:        teamstruct.EtaMedia,
+		Coach:           teamstruct.Coach,
+		Sponsor:         teamstruct.Sponsor,
+	}, nil
 }

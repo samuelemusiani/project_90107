@@ -283,3 +283,45 @@ func insertEvento(c *gin.Context) {
 		"message": "Evento inserted",
 	})
 }
+
+func updateIngaggio(c *gin.Context) {
+	var ingaggio struct {
+		Team      string `json:"team"`
+		Giocatore string `json:"giocatore"`
+		Salario   int64  `json:"salario"`
+	}
+
+	if err := c.BindJSON(&ingaggio); err != nil {
+		slog.With("err", err).Error("Binding JSON")
+		c.JSON(400, gin.H{
+			"error": "Invalid JSON"})
+		return
+	}
+
+	err := db.UpdateIngaggio(ingaggio.Giocatore, ingaggio.Team, ingaggio.Salario)
+	if err != nil {
+		slog.With("err", err).Error("Update ingaggio")
+		c.JSON(500, gin.H{
+			"error": "Error upadate ingaggio",
+		})
+		return
+	}
+
+	c.JSON(204, gin.H{
+		"message": "Update ingaggio effettuato",
+	})
+}
+
+func viewTeam(c *gin.Context) {
+	team := c.Param("nome")
+	t, err := db.ViewTeam(team)
+	if err != nil {
+		slog.With("err", err).Error("View team")
+		c.JSON(500, gin.H{
+			"error": "Error view team",
+		})
+		return
+	}
+
+	c.JSON(200, t)
+}
