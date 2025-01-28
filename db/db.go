@@ -331,6 +331,31 @@ func InsertCommenta(comm types.Commenta) error {
 	return err
 }
 
+func ClassificaCampionato(id string) ([]types.Classifica, error) {
+	var classifica []types.Classifica
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op12.sql")
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := db.Query(string(sqlFiles), id)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var tmp types.Classifica
+		err = rows.Scan(&tmp.Posizione, &tmp.TeamOGiocatore)
+		if err != nil {
+			return nil, err
+		}
+		classifica = append(classifica, tmp)
+	}
+
+	return classifica, nil
+}
+
 func UpdateIngaggio(giocatore string, newteam string, salario int64) error {
 
 	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", newteam)

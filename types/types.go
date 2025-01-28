@@ -127,3 +127,8 @@ type Commenta struct {
 	Partita int64  `json:"partita"`
 	Lingua  string `json:"lingua"`
 }
+
+type Classifica struct {
+	Posizione      int64  `json:"posizione"`
+	TeamOGiocatore string `json:"teamOGiocatore"`
+}

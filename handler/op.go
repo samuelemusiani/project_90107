@@ -635,3 +635,17 @@ func viewBigliettiEvento(c *gin.Context) {
 
 	c.JSON(200, ret)
 }
+
+func viewClassifica(c *gin.Context) {
+	idCampionato := c.Param("id_campionato")
+	cass, err := db.ClassificaCampionato(idCampionato)
+	if err != nil {
+		slog.With("err", err).Error("View classifica campionato")
+		c.JSON(500, gin.H{
+			"error": "Error view classifica campionato",
+		})
+		return
+	}
+
+	c.JSON(200, cass)
+}
