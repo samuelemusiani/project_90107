@@ -16,6 +16,7 @@ import OP14 from "@/components/CartaUsataEvento.vue";
 import OP15 from "@/components/CartaUsataPartita.vue";
 import OP16_18 from "@/components/CarteUsate.vue";
 import OP19_21 from "@/components/Statistiche.vue";
+import OP22_25 from "@/components/MazzoUsato.vue";
 import OP29 from "@/components/ViewBigliettiEvento.vue";
 import OP30 from "@/components/ViewCommentatore.vue";
 import OP31 from "@/components/ViewTeam.vue";
@@ -70,6 +71,14 @@ const comp = computed(() => {
       return OP19_21;
     case 21:
       return OP19_21;
+    case 22:
+      return OP22_25;
+    case 23:
+      return OP22_25;
+    case 24:
+      return OP22_25;
+    case 25:
+      return OP22_25;
     case 29:
       return OP29;
     case 30:
@@ -130,6 +139,10 @@ onMounted(() => {
           <option value="19">Visualizza statistiche campionato</option>
           <option value="20">Visualizza statistiche evento</option>
           <option value="21">Visualizza statistiche partita</option>
+          <option value="22">Visualizza mazzo più usato campionato</option>
+          <option value="23">Visualizza mazzo più usato evento</option>
+          <option value="24">Visualizza mazzo più efficace campionato</option>
+          <option value="25">Visualizza mazzo più efficace evento</option>
           <option value="29">Visualizza biglietti venduti per un evento</option>
           <option value="30">Visualizza commentatore di una partita</option>
           <option value="31">Visualizza team</option>

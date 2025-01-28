@@ -139,3 +139,8 @@ type Statistiche struct {
 	DanniFatti     int64 `json:"danniFatti"`
 	DanniSubiti    int64 `json:"danniSubiti"`
 }
+
+type MazzoVolte struct {
+	Mazzo int64 `json:"mazzo"`
+	Volte int64 `json:"volte"`
+}

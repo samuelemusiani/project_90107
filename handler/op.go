@@ -778,3 +778,59 @@ func viewStatistichePartita(c *gin.Context) {
 
 	c.JSON(200, stat)
 }
+
+func viewMazzoPiuUsatoCampionato(c *gin.Context) {
+	id := c.Param("id")
+	mazzo, err := db.MazzoPiuUsatoCampionato(id)
+	if err != nil {
+		slog.With("err", err).Error("View mazzo piu' usato campionato")
+		c.JSON(500, gin.H{
+			"error": "Error view mazzo piu' usato campionato",
+		})
+		return
+	}
+
+	c.JSON(200, mazzo)
+}
+
+func viewMazzoPiuUsatoEvento(c *gin.Context) {
+	id := c.Param("id")
+	mazzo, err := db.MazzoPiuUsatoEvento(id)
+	if err != nil {
+		slog.With("err", err).Error("View mazzo piu' usato evento")
+		c.JSON(500, gin.H{
+			"error": "Error view mazzo piu' usato evento",
+		})
+		return
+	}
+
+	c.JSON(200, mazzo)
+}
+
+func viewMazzoMiglioreCampionato(c *gin.Context) {
+	id := c.Param("id")
+	mazzo, err := db.MazzoMiglioreCampionato(id)
+	if err != nil {
+		slog.With("err", err).Error("View mazzo migliore campionato")
+		c.JSON(500, gin.H{
+			"error": "Error view mazzo migliore campionato",
+		})
+		return
+	}
+
+	c.JSON(200, mazzo)
+}
+
+func viewMazzoMiglioreEvento(c *gin.Context) {
+	id := c.Param("id")
+	mazzo, err := db.MazzoMiglioreEvento(id)
+	if err != nil {
+		slog.With("err", err).Error("View mazzo migliore evento")
+		c.JSON(500, gin.H{
+			"error": "Error view mazzo migliore evento",
+		})
+		return
+	}
+
+	c.JSON(200, mazzo)
+}

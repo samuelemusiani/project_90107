@@ -512,6 +512,58 @@ func StatistichePartita(idGiocatore string, idPartita string) (types.Statistiche
 	return stats, err
 }
 
+func MazzoPiuUsatoCampionato(id string) (types.MazzoVolte, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op22.sql")
+	if err != nil {
+		return types.MazzoVolte{}, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), id)
+
+	var tmp types.MazzoVolte
+	err = row.Scan(&tmp.Volte, &tmp.Mazzo)
+	return tmp, err
+}
+
+func MazzoPiuUsatoEvento(id string) (types.MazzoVolte, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op23.sql")
+	if err != nil {
+		return types.MazzoVolte{}, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), id)
+
+	var tmp types.MazzoVolte
+	err = row.Scan(&tmp.Volte, &tmp.Mazzo)
+	return tmp, err
+}
+
+func MazzoMiglioreCampionato(id string) (types.MazzoVolte, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op24.sql")
+	if err != nil {
+		return types.MazzoVolte{}, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), id)
+
+	var tmp types.MazzoVolte
+	err = row.Scan(&tmp.Volte, &tmp.Mazzo)
+	return tmp, err
+}
+
+func MazzoMiglioreEvento(id string) (types.MazzoVolte, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op25.sql")
+	if err != nil {
+		return types.MazzoVolte{}, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), id)
+
+	var tmp types.MazzoVolte
+	err = row.Scan(&tmp.Volte, &tmp.Mazzo)
+	return tmp, err
+}
+
 func UpdateIngaggio(giocatore string, newteam string, salario int64) error {
 
 	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", newteam)
