@@ -15,6 +15,7 @@ import OP13 from "@/components/CartaUsataCampionato.vue";
 import OP14 from "@/components/CartaUsataEvento.vue";
 import OP15 from "@/components/CartaUsataPartita.vue";
 import OP16_18 from "@/components/CarteUsate.vue";
+import OP19_21 from "@/components/Statistiche.vue";
 import OP29 from "@/components/ViewBigliettiEvento.vue";
 import OP30 from "@/components/ViewCommentatore.vue";
 import OP31 from "@/components/ViewTeam.vue";
@@ -63,6 +64,12 @@ const comp = computed(() => {
       return OP16_18;
     case 18:
       return OP16_18;
+    case 19:
+      return OP19_21;
+    case 20:
+      return OP19_21;
+    case 21:
+      return OP19_21;
     case 29:
       return OP29;
     case 30:
@@ -120,6 +127,9 @@ onMounted(() => {
           <option value="16">Visualizza carte più usate campionato</option>
           <option value="17">Visualizza carte più usate evento</option>
           <option value="18">Visualizza carte più usate partita</option>
+          <option value="19">Visualizza statistiche campionato</option>
+          <option value="20">Visualizza statistiche evento</option>
+          <option value="21">Visualizza statistiche partita</option>
           <option value="29">Visualizza biglietti venduti per un evento</option>
           <option value="30">Visualizza commentatore di una partita</option>
           <option value="31">Visualizza team</option>

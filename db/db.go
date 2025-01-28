@@ -246,7 +246,7 @@ func InsertGioca(g types.Gioca) error {
 		return err
 	}
 
-	_, err = db.Exec(string(sqlFiles), g.Giocatore, g.Partita, g.Mazzo, g.ElisirUsato, g.ElisirSprerato, g.DanniFatti, g.TipoTorri)
+	_, err = db.Exec(string(sqlFiles), g.Giocatore, g.Partita, g.Mazzo, g.ElisirUsato, g.ElisirSprecato, g.DanniFatti, g.TipoTorri)
 	return err
 }
 
@@ -468,6 +468,48 @@ func CarteUsatePartita(id string) ([]types.Carta, error) {
 	}
 
 	return carte, nil
+}
+
+func StatisticheCampionato(idGiocatore string, idCampionato string) (types.Statistiche, error) {
+	var stats types.Statistiche
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op19.sql")
+	if err != nil {
+		return stats, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), idGiocatore, idCampionato)
+
+	err = row.Scan(&stats.ElisirUsato, &stats.ElisirSprecato, &stats.DanniFatti, &stats.DanniSubiti)
+	return stats, err
+}
+
+func StatisticheEvento(idGiocatore string, idEvento string) (types.Statistiche, error) {
+	var stats types.Statistiche
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op20.sql")
+	if err != nil {
+		return stats, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), idGiocatore, idEvento)
+
+	err = row.Scan(&stats.ElisirUsato, &stats.ElisirSprecato, &stats.DanniFatti, &stats.DanniSubiti)
+	return stats, err
+}
+
+func StatistichePartita(idGiocatore string, idPartita string) (types.Statistiche, error) {
+	var stats types.Statistiche
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op21.sql")
+	if err != nil {
+		return stats, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), idGiocatore, idPartita)
+
+	err = row.Scan(&stats.ElisirUsato, &stats.ElisirSprecato, &stats.DanniFatti, &stats.DanniSubiti)
+	return stats, err
 }
 
 func UpdateIngaggio(giocatore string, newteam string, salario int64) error {

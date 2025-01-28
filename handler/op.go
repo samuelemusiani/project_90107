@@ -296,8 +296,8 @@ func insertPartita(c *gin.Context) {
 		Mazzo2          int64  `json:"mazzo2"`
 		ElisirUsato1    int64  `json:"elisirUsato1"`
 		ElisirUsato2    int64  `json:"elisirUsato2"`
-		ElisirSprerato1 int64  `json:"elisirSprerato1"`
-		ElisirSprerato2 int64  `json:"elisirSprerato2"`
+		ElisirSprecato1 int64  `json:"elisirSprecato1"`
+		ElisirSprecato2 int64  `json:"elisirSprecato2"`
 		DanniFatti1     int64  `json:"danniFatti1"`
 		Dannifatti2     int64  `json:"danniFatti2"`
 		TipoTorri1      string `json:"tipoTorri1"`
@@ -357,7 +357,7 @@ func insertPartita(c *gin.Context) {
 		Partita:        partitaID,
 		Mazzo:          partita.Mazzo1,
 		ElisirUsato:    partita.ElisirUsato1,
-		ElisirSprerato: partita.ElisirSprerato1,
+		ElisirSprecato: partita.ElisirSprecato1,
 		DanniFatti:     partita.DanniFatti1,
 		TipoTorri:      partita.TipoTorri1,
 	})
@@ -375,7 +375,7 @@ func insertPartita(c *gin.Context) {
 		Partita:        partitaID,
 		Mazzo:          partita.Mazzo2,
 		ElisirUsato:    partita.ElisirUsato2,
-		ElisirSprerato: partita.ElisirSprerato2,
+		ElisirSprecato: partita.ElisirSprecato2,
 		DanniFatti:     partita.Dannifatti2,
 		TipoTorri:      partita.TipoTorri2,
 	})
@@ -732,4 +732,49 @@ func viewCarteUsatePartita(c *gin.Context) {
 	}
 
 	c.JSON(200, carte)
+}
+
+func viewStatisticheCampionato(c *gin.Context) {
+	idGiocatore := c.Param("id_giocatore")
+	idCampionato := c.Param("id_campionato")
+	stat, err := db.StatisticheCampionato(idGiocatore, idCampionato)
+	if err != nil {
+		slog.With("err", err).Error("View statistiche campionato")
+		c.JSON(500, gin.H{
+			"error": "Error view statistiche campionato",
+		})
+		return
+	}
+
+	c.JSON(200, stat)
+}
+
+func viewStatisticheEvento(c *gin.Context) {
+	idGiocatore := c.Param("id_giocatore")
+	idEvento := c.Param("id_evento")
+	stat, err := db.StatisticheEvento(idGiocatore, idEvento)
+	if err != nil {
+		slog.With("err", err).Error("View statistiche evento")
+		c.JSON(500, gin.H{
+			"error": "Error view statistiche evento",
+		})
+		return
+	}
+
+	c.JSON(200, stat)
+}
+
+func viewStatistichePartita(c *gin.Context) {
+	idGiocatore := c.Param("id_giocatore")
+	idPartita := c.Param("id_partita")
+	stat, err := db.StatistichePartita(idGiocatore, idPartita)
+	if err != nil {
+		slog.With("err", err).Error("View statistiche partita")
+		c.JSON(500, gin.H{
+			"error": "Error view statistiche partita",
+		})
+		return
+	}
+
+	c.JSON(200, stat)
 }

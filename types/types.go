@@ -89,7 +89,7 @@ type Gioca struct {
 	Partita        int64  `json:"partita"`
 	Mazzo          int64  `json:"mazzo"`
 	ElisirUsato    int64  `json:"elisirUsato"`
-	ElisirSprerato int64  `json:"elisirSprerato"`
+	ElisirSprecato int64  `json:"elisirSprecato"`
 	DanniFatti     int64  `json:"danniFatti"`
 	TipoTorri      string `json:"tipoTorri"`
 }
@@ -131,4 +131,11 @@ type Commenta struct {
 type Classifica struct {
 	Posizione      int64  `json:"posizione"`
 	TeamOGiocatore string `json:"teamOGiocatore"`
+}
+
+type Statistiche struct {
+	ElisirUsato    int64 `json:"elisirUsato"`
+	ElisirSprecato int64 `json:"elisirSprecato"`
+	DanniFatti     int64 `json:"danniFatti"`
+	DanniSubiti    int64 `json:"danniSubiti"`
 }
