@@ -454,3 +454,50 @@ func insertFormato(c *gin.Context) {
 		"message": "Formato inserted",
 	})
 }
+
+func insertBiglietto(c *gin.Context) {
+	var biglietto types.Biglietto
+	if err := c.BindJSON(&biglietto); err != nil {
+		slog.With("err", err).Error("Binding JSON")
+		c.JSON(400, gin.H{
+			"error": "Invalid JSON"})
+		return
+	}
+
+	id, err := db.InsertBiglietto(biglietto)
+	if err != nil {
+		slog.With("err", err).Error("Inserting biglietto")
+		c.JSON(500, gin.H{
+			"error": "Error inserting biglietto",
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"message": "Biglietto inserted",
+		"id":      id,
+	})
+}
+
+func insertAssiste(c *gin.Context) {
+	var assiste types.Assiste
+	if err := c.BindJSON(&assiste); err != nil {
+		slog.With("err", err).Error("Binding JSON")
+		c.JSON(400, gin.H{
+			"error": "Invalid JSON"})
+		return
+	}
+
+	err := db.InsertAssiste(assiste)
+	if err != nil {
+		slog.With("err", err).Error("Inserting assiste")
+		c.JSON(500, gin.H{
+			"error": "Error inserting assiste",
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"message": "Assiste inserted",
+	})
+}

@@ -96,3 +96,15 @@ type Formato struct {
 	Mazzo int64 `json:"mazzo"`
 	Carta int64 `json:"carta"`
 }
+
+type Biglietto struct {
+	ID     int64 `json:"id"`
+	Prezzo int64 `json:"prezzo"`
+	Posto  int64 `json:"evento"`
+}
+
+type Assiste struct {
+	Persona   int64 `json:"persona"`
+	Evento    int64 `json:"evento"`
+	Biglietto int64 `json:"biglietto"`
+}

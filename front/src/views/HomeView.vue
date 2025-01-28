@@ -8,6 +8,7 @@ import OP06 from "@/components/InsertEvento.vue";
 import OP07 from "@/components/InsertPartita.vue";
 import OP08 from "@/components/InsertMazzo.vue";
 import OP09 from "@/components/InsertCarta.vue";
+import OP010 from "@/components/InsertBiglietto.vue";
 import NoAction from "@/components/NoAction.vue";
 import { ref, computed, watch, onMounted } from "vue";
 
@@ -34,6 +35,8 @@ const comp = computed(() => {
       return OP08;
     case 9:
       return OP09;
+    case 10:
+      return OP010;
     default:
       return NoAction;
   }
@@ -74,6 +77,7 @@ onMounted(() => {
           <option value="7">Inserire Partita</option>
           <option value="8">Inserire Mazzo</option>
           <option value="9">Inserire Carta</option>
+          <option value="10">Erogare Biglietto</option>
         </select>
       </div>
       <div class="shadow-lg bg-base-200 flex justify-center p-4 rounded-lg">

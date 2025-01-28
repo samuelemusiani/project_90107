@@ -278,3 +278,34 @@ func InsertFormato(mazzo int64, carta int64) error {
 	_, err = db.Exec(string(sqlFiles), mazzo, carta)
 	return err
 }
+
+func InsertBiglietto(b types.Biglietto) (int64, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op10_1.sql")
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = db.Exec(string(sqlFiles), b.Prezzo, b.Posto)
+	if err != nil {
+		return 0, err
+	}
+
+	row := db.QueryRow("SELECT lastval()")
+	var id int64
+	err = row.Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func InsertAssiste(a types.Assiste) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op10_2.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), a.Persona, a.Evento, a.Biglietto)
+	return err
+}
