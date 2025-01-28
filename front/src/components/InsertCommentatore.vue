@@ -5,27 +5,21 @@ import "vue-toast-notification/dist/theme-sugar.css";
 
 const $toast = useToast();
 
-const nome = ref("");
-const cognome = ref("");
-const dataNascita = ref("");
-const luogoNascita = ref("");
-const username = ref("");
-const dig = ref("");
+const persona = ref(0);
+const partita = ref(0);
+const lingua = ref("Italiano");
 
-async function insertGiocatore() {
+async function insertCommenta() {
   try {
-    const res = await fetch("/api/giocatore", {
+    const res = await fetch("/api/commenta", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nome: nome.value,
-        cognome: cognome.value,
-        dataNascita: new Date(dataNascita.value).toISOString(),
-        luogoNascita: luogoNascita.value,
-        username: username.value,
-        dig: new Date(dig.value).toISOString(),
+        persona: persona.value,
+        partita: partita.value,
+        lingua: lingua.value,
       }),
     });
 
@@ -48,78 +42,39 @@ onMounted(() => {});
     <form class="flex flex-col w-full gap-2" @click.prevent>
       <div>
         <div class="label">
-          <span class="label-text">Nome</span>
+          <span class="label-text">Persona (ID)</span>
+        </div>
+        <input
+          type="number"
+          v-model.number="persona"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <div>
+        <div class="label">
+          <span class="label-text">Partita (ID)</span>
+        </div>
+        <input
+          type="number"
+          v-model.number="partita"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <div>
+        <div class="label">
+          <span class="label-text">Lingua</span>
         </div>
         <input
           type="text"
-          placeholder="Nome"
-          v-model="nome"
+          v-model="lingua"
           class="input input-bordered w-full"
         />
       </div>
 
-      <div>
-        <div class="label">
-          <span class="label-text">Cognome</span>
-        </div>
-        <input
-          type="text"
-          placeholder="Cognome"
-          v-model="cognome"
-          class="input input-bordered w-full"
-        />
-      </div>
-
-      <div>
-        <div class="label">
-          <span class="label-text">Data di nascita</span>
-        </div>
-        <input
-          type="date"
-          placeholder="Data di nascita"
-          v-model="dataNascita"
-          class="input input-bordered w-full"
-        />
-      </div>
-
-      <div>
-        <div class="label">
-          <span class="label-text">Luogo di nascita</span>
-        </div>
-        <input
-          type="text"
-          placeholder="Luogo di nascita"
-          v-model="luogoNascita"
-          class="input input-bordered w-full"
-        />
-      </div>
-
-      <div>
-        <div class="label">
-          <span class="label-text">Username</span>
-        </div>
-        <input
-          type="text"
-          placeholder="Username"
-          v-model="username"
-          class="input input-bordered w-full"
-        />
-      </div>
-
-      <div>
-        <div class="label">
-          <span class="label-text">Data di inzio gioco</span>
-        </div>
-        <input
-          type="date"
-          placeholder="Dig"
-          v-model="dig"
-          class="input input-bordered w-full"
-        />
-      </div>
-
-      <button @click="insertGiocatore" class="btn btn-primary mt-4">
-        Insert user
+      <button @click="insertCommenta" class="btn btn-primary mt-4">
+        Insert commenta
       </button>
     </form>
   </div>

@@ -9,6 +9,7 @@ import OP07 from "@/components/InsertPartita.vue";
 import OP08 from "@/components/InsertMazzo.vue";
 import OP09 from "@/components/InsertCarta.vue";
 import OP010 from "@/components/InsertBiglietto.vue";
+import OP011 from "@/components/InsertCommentatore.vue";
 import OP29 from "@/components/ViewBigliettiEvento.vue";
 import OP30 from "@/components/ViewCommentatore.vue";
 import OP31 from "@/components/ViewTeam.vue";
@@ -41,6 +42,8 @@ const comp = computed(() => {
       return OP09;
     case 10:
       return OP010;
+    case 11:
+      return OP011;
     case 29:
       return OP29;
     case 30:
@@ -90,6 +93,7 @@ onMounted(() => {
           <option value="8">Inserire Mazzo</option>
           <option value="9">Inserire Carta</option>
           <option value="10">Erogare Biglietto</option>
+          <option value="11">Inserire Commentatore</option>
           <option value="29">Visualizza biglietti venduti per un evento</option>
           <option value="30">Visualizza commentatore di una partita</option>
           <option value="31">Visualizza team</option>
