@@ -6,6 +6,7 @@ import OP04 from "@/components/InsertSponsor.vue";
 import OP05 from "@/components/InsertCampionato.vue";
 import OP06 from "@/components/InsertEvento.vue";
 import OP07 from "@/components/InsertPartita.vue";
+import OP09 from "@/components/InsertCarta.vue";
 import NoAction from "@/components/NoAction.vue";
 import { ref, computed, watch, onMounted } from "vue";
 
@@ -28,6 +29,8 @@ const comp = computed(() => {
       return OP06;
     case 7:
       return OP07;
+    case 9:
+      return OP09;
     default:
       return NoAction;
   }
@@ -66,6 +69,7 @@ onMounted(() => {
           <option value="5">Inserire Campionato</option>
           <option value="6">Inserire Evento</option>
           <option value="7">Inserire Partita</option>
+          <option value="9">Inserire Carta</option>
         </select>
       </div>
       <div class="shadow-lg bg-base-200 flex justify-center p-4 rounded-lg">

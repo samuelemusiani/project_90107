@@ -392,3 +392,26 @@ func insertPartita(c *gin.Context) {
 		"message": "Partita inserted",
 	})
 }
+
+func insertCarta(c *gin.Context) {
+	var carta types.Carta
+	if err := c.BindJSON(&carta); err != nil {
+		slog.With("err", err).Error("Binding JSON")
+		c.JSON(400, gin.H{
+			"error": "Invalid JSON"})
+		return
+	}
+
+	err := db.InsertCarta(carta)
+	if err != nil {
+		slog.With("err", err).Error("Inserting carta")
+		c.JSON(500, gin.H{
+			"error": "Error inserting carta",
+		})
+		return
+	}
+
+	c.JSON(204, gin.H{
+		"message": "Carta inserted",
+	})
+}

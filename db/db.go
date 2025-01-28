@@ -238,3 +238,13 @@ func InsertGioca(g types.Gioca) error {
 	_, err = db.Exec(string(sqlFiles), g.Giocatore, g.Partita, g.Mazzo, g.ElisirUsato, g.ElisirSprerato, g.DanniFatti, g.TipoTorri)
 	return err
 }
+
+func InsertCarta(g types.Carta) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op09.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), g.Nome, g.Elisir, g.Danni)
+	return err
+}

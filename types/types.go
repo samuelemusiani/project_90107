@@ -80,3 +80,10 @@ type Gioca struct {
 	DanniFatti     int64  `json:"danniFatti"`
 	TipoTorri      string `json:"tipoTorri"`
 }
+
+type Carta struct {
+	ID     int64  `json:"id"`
+	Nome   string `json:"nome"`
+	Elisir int64  `json:"elisir"`
+	Danni  int64  `json:"danni"`
+}

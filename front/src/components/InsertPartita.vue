@@ -2,16 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
-
-const rand = (min: number, max: number): number => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-function formatTime(date: Date): string {
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${hours}:${minutes}`;
-}
+import { formatTime, rand } from "@/utils";
 
 const tipoTorri = ["base", "cannone", "balestra"];
 
