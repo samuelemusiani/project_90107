@@ -677,3 +677,17 @@ func viewCartaPiuUsataEvento(c *gin.Context) {
 
 	c.JSON(200, carta)
 }
+
+func viewCartaPiuUsataPartita(c *gin.Context) {
+	id := c.Param("id")
+	carta, err := db.CartaPiuUsataPartita(id)
+	if err != nil {
+		slog.With("err", err).Error("View carta piu' usata partita")
+		c.JSON(500, gin.H{
+			"error": "Error view carta piu' usata partita",
+		})
+		return
+	}
+
+	c.JSON(200, carta)
+}

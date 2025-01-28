@@ -46,7 +46,7 @@ onMounted(() => {});
       <div>ID Evento:</div>
       <input v-model="id" type="number" class="input input-bordered w-24" />
       <button @click="fetchClassifica" class="btn btn-primary">
-        Visualizza Classifica
+        Visualizza carta
       </button>
     </div>
     <div v-if="carta">

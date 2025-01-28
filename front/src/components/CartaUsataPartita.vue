@@ -17,7 +17,7 @@ const carta = ref<Carta | undefined>(undefined);
 
 async function fetchClassifica() {
   try {
-    const res = await fetch("/api/carta_piu_usata/campionato/" + id.value, {
+    const res = await fetch("/api/carta_piu_usata/partita/" + id.value, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -41,9 +41,9 @@ onMounted(() => {});
 
 <template>
   <div class="greetings w-full flex flex-col gap-4">
-    <h3 class="font-bold text-xl">Carta più usata campionato</h3>
+    <h3 class="font-bold text-xl">Carta più usata partita</h3>
     <div class="flex gap-2 items-center justify-evenly">
-      <div>ID Campionato:</div>
+      <div>ID partita:</div>
       <input v-model="id" type="number" class="input input-bordered w-24" />
       <button @click="fetchClassifica" class="btn btn-primary">
         Visualizza Carta
@@ -102,6 +102,7 @@ onMounted(() => {});
         </div>
       </form>
     </div>
+    <div v-else class="text-center">Niente da vedere</div>
   </div>
 </template>
 
