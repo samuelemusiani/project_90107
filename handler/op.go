@@ -286,22 +286,22 @@ func insertEvento(c *gin.Context) {
 
 func insertPartita(c *gin.Context) {
 	var partita struct {
-		Vincitore       bool      `json:"vincitore"` // true = giocatore1, false = giocatore2
-		Orario          time.Time `json:"orario"`
-		Tempo           int64     `json:"tempo"`
-		Evento          string    `json:"evento"`
-		Giocatore1      string    `json:"giocatore1"`
-		Giocatore2      string    `json:"giocatore2"`
-		Mazzo1          int64     `json:"mazzo1"`
-		Mazzo2          int64     `json:"mazzo2"`
-		ElisirUsato1    int64     `json:"elisirUsato1"`
-		ElisirUsato2    int64     `json:"elisirUsato2"`
-		ElisirSprerato1 int64     `json:"elisirSprerato1"`
-		ElisirSprerato2 int64     `json:"elisirSprerato2"`
-		DanniFatti1     int64     `json:"danniFatti1"`
-		Dannifatti2     int64     `json:"danniFatti2"`
-		TipoTorri1      string    `json:"tipoTorri1"`
-		TipoTorri2      string    `json:"tipoTorri2"`
+		Vincitore       bool   `json:"vincitore"` // true = giocatore1, false = giocatore2
+		Orario          string `json:"orario"`
+		Tempo           int64  `json:"tempo"`
+		Evento          string `json:"evento"`
+		Giocatore1      string `json:"giocatore1"`
+		Giocatore2      string `json:"giocatore2"`
+		Mazzo1          int64  `json:"mazzo1"`
+		Mazzo2          int64  `json:"mazzo2"`
+		ElisirUsato1    int64  `json:"elisirUsato1"`
+		ElisirUsato2    int64  `json:"elisirUsato2"`
+		ElisirSprerato1 int64  `json:"elisirSprerato1"`
+		ElisirSprerato2 int64  `json:"elisirSprerato2"`
+		DanniFatti1     int64  `json:"danniFatti1"`
+		Dannifatti2     int64  `json:"danniFatti2"`
+		TipoTorri1      string `json:"tipoTorri1"`
+		TipoTorri2      string `json:"tipoTorri2"`
 	}
 
 	if err := c.BindJSON(&partita); err != nil {

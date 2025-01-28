@@ -47,8 +47,8 @@ async function insertPartita() {
         elisirSprecato2: elisirSprecato2.value,
         danniFatti1: danniFatti1.value,
         danniFatti2: danniFatti2.value,
-        tipoTorre1: tipoTorre1.value,
-        tipoTorre2: tipoTorre2.value,
+        tipoTorri1: tipoTorre1.value,
+        tipoTorri2: tipoTorre2.value,
       }),
     });
 

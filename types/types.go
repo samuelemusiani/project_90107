@@ -77,11 +77,11 @@ type Evento struct {
 }
 
 type Partita struct {
-	ID        int64     `json:"id"`
-	Vincitore int64     `json:"vincitore"`
-	Orario    time.Time `json:"orario"`
-	Tempo     int64     `json:"tempo"`
-	Evento    int64     `json:"evento"`
+	ID        int64  `json:"id"`
+	Vincitore int64  `json:"vincitore"`
+	Orario    string `json:"orario"`
+	Tempo     int64  `json:"tempo"`
+	Evento    int64  `json:"evento"`
 }
 
 type Gioca struct {
