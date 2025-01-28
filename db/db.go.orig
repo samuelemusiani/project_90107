@@ -208,6 +208,7 @@ func InsertEvento(e types.Evento) error {
 	return err
 }
 
+<<<<<<< HEAD
 func InsertPartita(p types.Partita) (int64, error) {
 	sqlFiles, err := sqlFiles.ReadFile("sql/op07_1.sql")
 	if err != nil {
@@ -232,10 +233,30 @@ func InsertPartita(p types.Partita) (int64, error) {
 
 func InsertGioca(g types.Gioca) error {
 	sqlFiles, err := sqlFiles.ReadFile("sql/op07_2.sql")
+=======
+func UpdateIngaggio(giocatore string, newteam string, salario int64) error {
+
+	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", newteam)
+	var teamID string
+	err := row.Scan(&teamID)
+	if err != nil {
+		return errors.New("Team not found")
+	}
+
+	row = db.QueryRow("SELECT id FROM Giocatore WHERE username = $1", giocatore)
+	var giocatoreID string
+	err = row.Scan(&giocatoreID)
+	if err != nil {
+		return errors.New("Giocatore not found")
+	}
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op32.sql")
+>>>>>>> bottomup
 	if err != nil {
 		return err
 	}
 
+<<<<<<< HEAD
 	_, err = db.Exec(string(sqlFiles), g.Giocatore, g.Partita, g.Mazzo, g.ElisirUsato, g.ElisirSprerato, g.DanniFatti, g.TipoTorri)
 	return err
 }
@@ -254,94 +275,7 @@ func CreateMazzo() (int64, error) {
 	sqlFiles, err := sqlFiles.ReadFile("sql/op08_1.sql")
 	_, err = db.Query(string(sqlFiles) + ";")
 
-	if err != nil {
-		return 0, err
-	}
-
-	row := db.QueryRow("SELECT * FROM mazzo ORDER BY id DESC LIMIT 1")
-	var id int64
-	err = row.Scan(&id)
-	if err != nil {
-		return 0, err
-	}
-
-	slog.With("id", id).Debug("Mazzo created")
-
-	return id, nil
-}
-
-func InsertFormato(mazzo int64, carta int64) error {
-	sqlFiles, err := sqlFiles.ReadFile("sql/op08_2.sql")
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(string(sqlFiles), mazzo, carta)
-	return err
-}
-
-func InsertBiglietto(b types.Biglietto) (int64, error) {
-	sqlFiles, err := sqlFiles.ReadFile("sql/op10_1.sql")
-	if err != nil {
-		return 0, err
-	}
-
-	_, err = db.Exec(string(sqlFiles), b.Prezzo, b.Posto)
-	if err != nil {
-		return 0, err
-	}
-
-	row := db.QueryRow("SELECT lastval()")
-	var id int64
-	err = row.Scan(&id)
-	if err != nil {
-		return 0, err
-	}
-
-	return id, nil
-}
-
-func InsertAssiste(a types.Assiste) error {
-	sqlFiles, err := sqlFiles.ReadFile("sql/op10_2.sql")
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(string(sqlFiles), a.Persona, a.Evento, a.Biglietto)
-	return err
-}
-
-func InsertCommenta(comm types.Commenta) error {
-	sqlFiles, err := sqlFiles.ReadFile("sql/op11.sql")
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(string(sqlFiles), comm.Persona, comm.Partita, comm.Lingua)
-	return err
-}
-
-func UpdateIngaggio(giocatore string, newteam string, salario int64) error {
-
-	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", newteam)
-	var teamID string
-	err := row.Scan(&teamID)
-	if err != nil {
-		return errors.New("Team not found")
-	}
-
-	row = db.QueryRow("SELECT id FROM Giocatore WHERE username = $1", giocatore)
-	var giocatoreID string
-	err = row.Scan(&giocatoreID)
-	if err != nil {
-		return errors.New("Giocatore not found")
-	}
-
-	sqlFiles, err := sqlFiles.ReadFile("sql/op32.sql")
-	if err != nil {
-		return err
-	}
-
+=======
 	_, err = db.Exec(string(sqlFiles), giocatoreID, teamID, salario)
 	return err
 }
@@ -441,9 +375,74 @@ func ViewBigliettiEvento(evento string) (int64, error) {
 	row = db.QueryRow(string(sqlFiles), eventoID)
 
 	err = row.Scan(&biglietti)
+>>>>>>> bottomup
 	if err != nil {
 		return 0, err
 	}
 
+<<<<<<< HEAD
+	row := db.QueryRow("SELECT * FROM mazzo ORDER BY id DESC LIMIT 1")
+	var id int64
+	err = row.Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	slog.With("id", id).Debug("Mazzo created")
+
+	return id, nil
+}
+
+func InsertFormato(mazzo int64, carta int64) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op08_2.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), mazzo, carta)
+	return err
+}
+
+func InsertBiglietto(b types.Biglietto) (int64, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op10_1.sql")
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = db.Exec(string(sqlFiles), b.Prezzo, b.Posto)
+	if err != nil {
+		return 0, err
+	}
+
+	row := db.QueryRow("SELECT lastval()")
+	var id int64
+	err = row.Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func InsertAssiste(a types.Assiste) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op10_2.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), a.Persona, a.Evento, a.Biglietto)
+	return err
+}
+
+func InsertCommenta(comm types.Commenta) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op11.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), comm.Persona, comm.Partita, comm.Lingua)
+	return err
+=======
 	return biglietti, nil
+>>>>>>> bottomup
 }

@@ -233,7 +233,7 @@ func insertCampionato(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Campionato inserted",
 	})
 }
@@ -284,6 +284,7 @@ func insertEvento(c *gin.Context) {
 	})
 }
 
+<<<<<<< HEAD
 func insertPartita(c *gin.Context) {
 	var partita struct {
 		Vincitore       bool      `json:"vincitore"` // true = giocatore1, false = giocatore2
@@ -305,21 +306,40 @@ func insertPartita(c *gin.Context) {
 	}
 
 	if err := c.BindJSON(&partita); err != nil {
+=======
+func updateIngaggio(c *gin.Context) {
+	var ingaggio struct {
+		Team      string `json:"team"`
+		Giocatore string `json:"giocatore"`
+		Salario   int64  `json:"salario"`
+	}
+
+	if err := c.BindJSON(&ingaggio); err != nil {
+>>>>>>> bottomup
 		slog.With("err", err).Error("Binding JSON")
 		c.JSON(400, gin.H{
 			"error": "Invalid JSON"})
 		return
 	}
 
+<<<<<<< HEAD
 	id1, err := db.GetGiocatoreIDByUsername(partita.Giocatore1)
 	if err != nil {
 		slog.With("err", err).Error("Getting giocatore ID")
 		c.JSON(500, gin.H{
 			"error": "Error getting giocatore ID",
+=======
+	err := db.UpdateIngaggio(ingaggio.Giocatore, ingaggio.Team, ingaggio.Salario)
+	if err != nil {
+		slog.With("err", err).Error("Update ingaggio")
+		c.JSON(500, gin.H{
+			"error": "Error upadate ingaggio",
+>>>>>>> bottomup
 		})
 		return
 	}
 
+<<<<<<< HEAD
 	id2, err := db.GetGiocatoreIDByUsername(partita.Giocatore2)
 	if err != nil {
 		slog.With("err", err).Error("Getting giocatore ID")
@@ -399,10 +419,25 @@ func insertMazzo(c *gin.Context) {
 		slog.With("err", err).Error("Creating mazzo")
 		c.JSON(500, gin.H{
 			"error": "Error creating mazzo",
+=======
+	c.JSON(204, gin.H{
+		"message": "Update ingaggio effettuato",
+	})
+}
+
+func viewTeam(c *gin.Context) {
+	team := c.Param("nome")
+	t, err := db.ViewTeam(team)
+	if err != nil {
+		slog.With("err", err).Error("View team")
+		c.JSON(500, gin.H{
+			"error": "Error view team",
+>>>>>>> bottomup
 		})
 		return
 	}
 
+<<<<<<< HEAD
 	c.JSON(201, gin.H{
 		"message": "Mazzo created",
 		"id":      id,
@@ -423,10 +458,23 @@ func insertCarta(c *gin.Context) {
 		slog.With("err", err).Error("Inserting carta")
 		c.JSON(500, gin.H{
 			"error": "Error inserting carta",
+=======
+	c.JSON(200, t)
+}
+
+func viewCommentatore(c *gin.Context) {
+	idPartita := c.Param("id_partita")
+	t, err := db.ViewCommentatore(idPartita)
+	if err != nil {
+		slog.With("err", err).Error("View commentatore")
+		c.JSON(500, gin.H{
+			"error": "Error view commentatore",
+>>>>>>> bottomup
 		})
 		return
 	}
 
+<<<<<<< HEAD
 	c.JSON(201, gin.H{
 		"message": "Carta inserted",
 	})
@@ -446,10 +494,23 @@ func insertFormato(c *gin.Context) {
 		slog.With("err", err).Error("Inserting formato")
 		c.JSON(500, gin.H{
 			"error": "Error inserting formato",
+=======
+	c.JSON(200, t)
+}
+
+func viewBigliettiEvento(c *gin.Context) {
+	nomeEvento := c.Param("nome_evento")
+	t, err := db.ViewBigliettiEvento(nomeEvento)
+	if err != nil {
+		slog.With("err", err).Error("View biglietti")
+		c.JSON(500, gin.H{
+			"error": "Error view biglietti",
+>>>>>>> bottomup
 		})
 		return
 	}
 
+<<<<<<< HEAD
 	c.JSON(201, gin.H{
 		"message": "Formato inserted",
 	})
@@ -547,79 +608,12 @@ func insertCommenta(c *gin.Context) {
 	c.JSON(201, gin.H{
 		"message": "commenta inserted",
 	})
-}
-
-func updateIngaggio(c *gin.Context) {
-	var ingaggio struct {
-		Team      string `json:"team"`
-		Giocatore string `json:"giocatore"`
-		Salario   int64  `json:"salario"`
-	}
-
-	if err := c.BindJSON(&ingaggio); err != nil {
-		slog.With("err", err).Error("Binding JSON")
-		c.JSON(400, gin.H{
-			"error": "Invalid JSON"})
-		return
-	}
-
-	err := db.UpdateIngaggio(ingaggio.Giocatore, ingaggio.Team, ingaggio.Salario)
-	if err != nil {
-		slog.With("err", err).Error("Update ingaggio")
-		c.JSON(500, gin.H{
-			"error": "Error upadate ingaggio",
-		})
-		return
-	}
-
-	c.JSON(204, gin.H{
-		"message": "Update ingaggio effettuato",
-	})
-}
-
-func viewTeam(c *gin.Context) {
-	team := c.Param("nome")
-	t, err := db.ViewTeam(team)
-	if err != nil {
-		slog.With("err", err).Error("View team")
-		c.JSON(500, gin.H{
-			"error": "Error view team",
-		})
-		return
-	}
-
-	c.JSON(200, t)
-}
-
-func viewCommentatore(c *gin.Context) {
-	idPartita := c.Param("id_partita")
-	t, err := db.ViewCommentatore(idPartita)
-	if err != nil {
-		slog.With("err", err).Error("View commentatore")
-		c.JSON(500, gin.H{
-			"error": "Error view commentatore",
-		})
-		return
-	}
-
-	c.JSON(200, t)
-}
-
-func viewBigliettiEvento(c *gin.Context) {
-	nomeEvento := c.Param("nome_evento")
-	t, err := db.ViewBigliettiEvento(nomeEvento)
-	if err != nil {
-		slog.With("err", err).Error("View biglietti")
-		c.JSON(500, gin.H{
-			"error": "Error view biglietti",
-		})
-		return
-	}
-
+=======
 	var ret struct {
 		Numero int64 `json:"numero"`
 	}
 	ret.Numero = t
 
 	c.JSON(200, ret)
+>>>>>>> bottomup
 }

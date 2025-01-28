@@ -7,7 +7,7 @@ const $toast = useToast();
 
 const nome = ref("");
 const team = ref("");
-const budget = ref("");
+const budget = ref(0);
 
 async function insertSponsor() {
   try {
@@ -58,7 +58,7 @@ onMounted(() => {});
         </div>
         <input
           type="text"
-          placeholder="Cognome"
+          placeholder="nome team"
           v-model="team"
           class="input input-bordered w-full"
         />
@@ -69,8 +69,8 @@ onMounted(() => {});
           <span class="label-text">Budget</span>
         </div>
         <input
-          type="date"
-          placeholder="Data di nascita"
+          type="number"
+          placeholder="budget"
           v-model="budget"
           class="input input-bordered w-full"
         />
