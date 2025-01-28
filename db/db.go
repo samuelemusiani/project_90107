@@ -395,6 +395,81 @@ func CartaPiuUsataPartita(id string) (carta types.Carta, err error) {
 	return
 }
 
+// L'ID all'interno della carta indica il numero di vole che e' stata usata
+func CarteUsateCampionato(id string) ([]types.Carta, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op16.sql")
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := db.Query(string(sqlFiles), id)
+	if err != nil {
+		return nil, err
+	}
+
+	var carte []types.Carta
+	for rows.Next() {
+		var carta types.Carta
+		err = rows.Scan(&carta.Nome, &carta.ID)
+		if err != nil {
+			return nil, err
+		}
+		carte = append(carte, carta)
+	}
+
+	return carte, nil
+}
+
+// L'ID all'interno della carta indica il numero di vole che e' stata usata
+func CarteUsateEvento(id string) ([]types.Carta, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op17.sql")
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := db.Query(string(sqlFiles), id)
+	if err != nil {
+		return nil, err
+	}
+
+	var carte []types.Carta
+	for rows.Next() {
+		var carta types.Carta
+		err = rows.Scan(&carta.Nome, &carta.ID)
+		if err != nil {
+			return nil, err
+		}
+		carte = append(carte, carta)
+	}
+
+	return carte, nil
+}
+
+// L'ID all'interno della carta indica il numero di vole che e' stata usata
+func CarteUsatePartita(id string) ([]types.Carta, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op18.sql")
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := db.Query(string(sqlFiles), id)
+	if err != nil {
+		return nil, err
+	}
+
+	var carte []types.Carta
+	for rows.Next() {
+		var carta types.Carta
+		err = rows.Scan(&carta.Nome, &carta.ID)
+		if err != nil {
+			return nil, err
+		}
+		carte = append(carte, carta)
+	}
+
+	return carte, nil
+}
+
 func UpdateIngaggio(giocatore string, newteam string, salario int64) error {
 
 	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", newteam)

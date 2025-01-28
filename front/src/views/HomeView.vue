@@ -14,6 +14,7 @@ import OP12 from "@/components/ClassificaCampionato.vue";
 import OP13 from "@/components/CartaUsataCampionato.vue";
 import OP14 from "@/components/CartaUsataEvento.vue";
 import OP15 from "@/components/CartaUsataPartita.vue";
+import OP16_18 from "@/components/CarteUsate.vue";
 import OP29 from "@/components/ViewBigliettiEvento.vue";
 import OP30 from "@/components/ViewCommentatore.vue";
 import OP31 from "@/components/ViewTeam.vue";
@@ -56,6 +57,12 @@ const comp = computed(() => {
       return OP14;
     case 15:
       return OP15;
+    case 16:
+      return OP16_18;
+    case 17:
+      return OP16_18;
+    case 18:
+      return OP16_18;
     case 29:
       return OP29;
     case 30:
@@ -110,6 +117,9 @@ onMounted(() => {
           <option value="13">Visualizza carta più usata campionato</option>
           <option value="14">Visualizza carta più usata evento</option>
           <option value="15">Visualizza carta più usata partita</option>
+          <option value="16">Visualizza carte più usate campionato</option>
+          <option value="17">Visualizza carte più usate evento</option>
+          <option value="18">Visualizza carte più usate partita</option>
           <option value="29">Visualizza biglietti venduti per un evento</option>
           <option value="30">Visualizza commentatore di una partita</option>
           <option value="31">Visualizza team</option>
@@ -117,7 +127,7 @@ onMounted(() => {
         </select>
       </div>
       <div class="shadow-lg bg-base-200 flex justify-center p-4 rounded-lg">
-        <component :is="comp" class="max-w-md" />
+        <component :is="comp" class="max-w-md" :op="op" />
       </div>
     </main>
   </div>
