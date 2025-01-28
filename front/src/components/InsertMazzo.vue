@@ -31,7 +31,7 @@ async function createMazzo() {
 
 async function insertFormato() {
   try {
-    const res = await fetch("/api/formato", {
+    const res = await fetch("http://130.136.3.143:3000/api/formato", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,9 +46,6 @@ async function insertFormato() {
       $toast.error("Errore durante l'inserimento della carta nel mazzo");
       throw new Error("Failed to insert user");
     }
-
-    const data = await res.json();
-    id.value = data.id;
   } catch (err) {
     console.error(err);
   }
@@ -62,11 +59,12 @@ onMounted(() => {});
     <h3 class="font-bold text-xl">Insert mazzo</h3>
 
     <form class="flex flex-col w-full gap-2" @click.prevent>
-      <div class="flex gap-4 items-center">
-        <button @click="createMazzo" class="btn btn-secondary mt-4">
+      <div class="flex gap-4 items-center mt-4">
+        <input type="text" v-model="id" class="input input-bordered w-full" />
+
+        <button @click="createMazzo" class="btn btn-secondary">
           Crea Mazzo
         </button>
-        <div class="flex items-center">ID: {{ id }}</div>
       </div>
 
       <div>
