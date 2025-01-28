@@ -30,6 +30,7 @@ func InitAndServe(conf *config.Config) error {
 	api.POST("/sponsor", insertSponsor)
 	api.POST("/campionato", insertCampionato)
 	api.POST("/evento", insertEvento)
+	api.POST("/partita", insertPartita)
 
 	// Read index.html into memory
 	index, err := frontend.ReadFile("dist/index.html")

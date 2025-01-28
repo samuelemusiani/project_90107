@@ -206,3 +206,35 @@ func InsertEvento(e types.Evento) error {
 	_, err = db.Exec(string(sqlFiles), e.Nome, e.Luogo, e.Data, e.PostiTotali, e.Campionato)
 	return err
 }
+
+func InsertPartita(p types.Partita) (int64, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op07_1.sql")
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = db.Exec(string(sqlFiles), p.Vincitore, p.Orario, p.Tempo, p.Evento)
+	if err != nil {
+		return 0, err
+	}
+
+	row := db.QueryRow("SELECT id FROM partita WHERE vincitore = $1 AND orario = $2 AND tempo = $3 AND evento = $4", p.Vincitore, p.Orario, p.Tempo, p.Evento)
+
+	var id int64
+	err = row.Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func InsertGioca(g types.Gioca) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op07_2.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), g.Giocatore, g.Partita, g.Mazzo, g.ElisirUsato, g.ElisirSprerato, g.DanniFatti, g.TipoTorri)
+	return err
+}

@@ -283,3 +283,112 @@ func insertEvento(c *gin.Context) {
 		"message": "Evento inserted",
 	})
 }
+
+func insertPartita(c *gin.Context) {
+	var partita struct {
+		Vincitore       bool      `json:"vincitore"` // true = giocatore1, false = giocatore2
+		Orario          time.Time `json:"orario"`
+		Tempo           int64     `json:"tempo"`
+		Evento          string    `json:"evento"`
+		Giocatore1      string    `json:"giocatore1"`
+		Giocatore2      string    `json:"giocatore2"`
+		Mazzo1          int64     `json:"mazzo1"`
+		Mazzo2          int64     `json:"mazzo2"`
+		ElisirUsato1    int64     `json:"elisirUsato1"`
+		ElisirUsato2    int64     `json:"elisirUsato2"`
+		ElisirSprerato1 int64     `json:"elisirSprerato1"`
+		ElisirSprerato2 int64     `json:"elisirSprerato2"`
+		DanniFatti1     int64     `json:"danniFatti1"`
+		Dannifatti2     int64     `json:"danniFatti2"`
+		TipoTorri1      string    `json:"tipoTorri1"`
+		TipoTorri2      string    `json:"tipoTorri2"`
+	}
+
+	if err := c.BindJSON(&partita); err != nil {
+		slog.With("err", err).Error("Binding JSON")
+		c.JSON(400, gin.H{
+			"error": "Invalid JSON"})
+		return
+	}
+
+	id1, err := db.GetGiocatoreIDByUsername(partita.Giocatore1)
+	if err != nil {
+		slog.With("err", err).Error("Getting giocatore ID")
+		c.JSON(500, gin.H{
+			"error": "Error getting giocatore ID",
+		})
+		return
+	}
+
+	id2, err := db.GetGiocatoreIDByUsername(partita.Giocatore2)
+	if err != nil {
+		slog.With("err", err).Error("Getting giocatore ID")
+		c.JSON(500, gin.H{
+			"error": "Error getting giocatore ID",
+		})
+		return
+	}
+
+	eventoID, err := db.GetEventoIDByName(partita.Evento)
+	if err != nil {
+		slog.With("err", err).Error("Getting evento ID")
+		c.JSON(500, gin.H{
+			"error": "Error getting evento ID",
+		})
+		return
+	}
+
+	partitaID, err := db.InsertPartita(types.Partita{
+		Vincitore: id1,
+		Orario:    partita.Orario,
+		Tempo:     partita.Tempo,
+		Evento:    eventoID,
+	})
+	if err != nil {
+		slog.With("err", err).Error("Inserting partita")
+		c.JSON(500, gin.H{
+			"error": "Error inserting partita",
+		})
+		return
+	}
+
+	err = db.InsertGioca(types.Gioca{
+		Giocatore:      id1,
+		Partita:        partitaID,
+		Mazzo:          partita.Mazzo1,
+		ElisirUsato:    partita.ElisirUsato1,
+		ElisirSprerato: partita.ElisirSprerato1,
+		DanniFatti:     partita.DanniFatti1,
+		TipoTorri:      partita.TipoTorri1,
+	})
+
+	if err != nil {
+		slog.With("err", err).Error("Inserting gioca")
+		c.JSON(500, gin.H{
+			"error": "Error inserting gioca",
+		})
+		return
+	}
+
+	err = db.InsertGioca(types.Gioca{
+		Giocatore:      id2,
+		Partita:        partitaID,
+		Mazzo:          partita.Mazzo2,
+		ElisirUsato:    partita.ElisirUsato2,
+		ElisirSprerato: partita.ElisirSprerato2,
+		DanniFatti:     partita.Dannifatti2,
+		TipoTorri:      partita.TipoTorri2,
+	})
+
+	if err != nil {
+		slog.With("err", err).Error("Inserting gioca")
+		c.JSON(500, gin.H{
+			"error": "Error inserting gioca",
+		})
+		return
+	}
+
+	c.JSON(204, gin.H{
+		"message": "Partita inserted",
+	})
+}

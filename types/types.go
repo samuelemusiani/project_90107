@@ -62,3 +62,21 @@ type Evento struct {
 	PostiTotali int64     `json:"postiTotali"`
 	Campionato  int64     `json:"campionato"`
 }
+
+type Partita struct {
+	ID        int64     `json:"id"`
+	Vincitore int64     `json:"vincitore"`
+	Orario    time.Time `json:"orario"`
+	Tempo     int64     `json:"tempo"`
+	Evento    int64     `json:"evento"`
+}
+
+type Gioca struct {
+	Giocatore      int64  `json:"giocatore"`
+	Partita        int64  `json:"partita"`
+	Mazzo          int64  `json:"mazzo"`
+	ElisirUsato    int64  `json:"elisirUsato"`
+	ElisirSprerato int64  `json:"elisirSprerato"`
+	DanniFatti     int64  `json:"danniFatti"`
+	TipoTorri      string `json:"tipoTorri"`
+}
