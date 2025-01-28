@@ -309,3 +309,13 @@ func InsertAssiste(a types.Assiste) error {
 	_, err = db.Exec(string(sqlFiles), a.Persona, a.Evento, a.Biglietto)
 	return err
 }
+
+func InsertCommenta(comm types.Commenta) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op11.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), comm.Persona, comm.Partita, comm.Lingua)
+	return err
+}

@@ -36,6 +36,8 @@ func InitAndServe(conf *config.Config) error {
 	api.POST("/carta", insertCarta)
 	api.POST("/biglietto", insertBiglietto)
 	api.POST("/assiste", insertAssiste)
+	api.POST("/persona", insertPersona)
+	api.POST("/commenta", insertCommenta)
 
 	// Read index.html into memory
 	index, err := frontend.ReadFile("dist/index.html")

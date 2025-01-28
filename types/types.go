@@ -108,3 +108,9 @@ type Assiste struct {
 	Evento    int64 `json:"evento"`
 	Biglietto int64 `json:"biglietto"`
 }
+
+type Commenta struct {
+	Persona int64  `json:"persona"`
+	Partita int64  `json:"partita"`
+	Lingua  string `json:"lingua"`
+}

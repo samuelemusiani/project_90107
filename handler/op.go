@@ -501,3 +501,50 @@ func insertAssiste(c *gin.Context) {
 		"message": "Assiste inserted",
 	})
 }
+
+func insertPersona(c *gin.Context) {
+	var p types.Persona
+	if err := c.BindJSON(&p); err != nil {
+		slog.With("err", err).Error("Binding JSON")
+		c.JSON(400, gin.H{
+			"error": "INvalid JSON"})
+		return
+	}
+
+	id, err := db.InsertPersona(p)
+	if err != nil {
+		slog.With("err", err).Error("Inserting persona")
+		c.JSON(500, gin.H{
+			"error": "Error inserting persona",
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"message": "persona inserted",
+		"id":      id,
+	})
+}
+
+func insertCommenta(c *gin.Context) {
+	var comm types.Commenta
+	if err := c.BindJSON(&comm); err != nil {
+		slog.With("err", err).Error("Biding JSON")
+		c.JSON(400, gin.H{
+			"error": "Invalid JSON",
+		})
+	}
+
+	err := db.InsertCommenta(comm)
+	if err != nil {
+		slog.With("err", err).Error("Inserting commenta")
+		c.JSON(500, gin.H{
+			"error": "Error inserting commenta",
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"message": "commenta inserted",
+	})
+}
