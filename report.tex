@@ -101,7 +101,7 @@ Leaderboard Giocatori & Classifica dei giocatori di un campionato & Classifica G
 Sponsor & Sponsor che sponsorizza uno o più team & & Team \\ \hline
 Sponsorizzazione & Budget che lo sponsor fornisce al team & & Team \\ \hline
 Spettatore & Persona che assiste ad un evento & & Evento \\ \hline
-Cronista & Persona che commenta le partite per gli spettatori & & Partita \\ \hline
+Cronista & Persona che commenta le partite per gli spettatori & Commentatore & Partita \\ \hline
 Biglietto & Oggetto che permette ad uno spettatore di assistere ad un evento & & Spettatore, Evento \\ \hline
 Elisir    & Valuta utilizzata durante le partite per piazzare carte & & Carta \\ \hline
 Torre     & Base dei giocatori, l'obbiettivo del gioco è distruggere quella dell'avversario & & Partita \\ \hline
@@ -292,7 +292,7 @@ Giocatore & Persona che gioca a Clash Royale & Nome (stringa), Cognome (stringa)
 Team & Insieme di giocatori & DF (data), Logo (immagine), Nome (stringa) Stato geografico (stringa) & " \\ \hline
 Biglietto & Biglietto per assistere ad un evento & Prezzo (string), Posto (numerico) & " \\ \hline
 Campionato & Insieme di eventi & Nome (stringa), Luogo (stringa), Data inizio (data), Data fine (data), Tipo (stringa), Montepremi (numerico) & " \\ \hline
-Evento & Insieme di partite & Nome (stringa), Luogo (stringa), Data (stringa), Posti totali (stringa), Posti usati (stringa) & " \\ \hline
+Evento & Insieme di partite & Nome (stringa), Luogo (stringa), Data (stringa), Posti totali (stringa)& " \\ \hline
 Partita & Partita tra due giocatori & Tempo (numerico), Tipo di vittoria (stringa), Vincitore (numerico), Orario (data) & " \\ \hline
 Mazzo & Insieme di carte usate da un giocatore in una partita & - & " \\ \hline
 Carta & Carta singola che si può utilizzare per formare un mazzo & Nome (stringa), Elisir (numerico), Danno (numerico) & " \\ \hline
@@ -343,7 +343,7 @@ Ha & Associa una leaderboard ad un campionato & Campionato (1,1), Leaderboard (1
     \item Il tempo di una partita è compreso tra 0 e 5 minuti
     \item L'elisir delle carte è compreso tra 1 e 9 ed è intero
     \item I danni di una carta sono maggiori di 0
-    \item I posti usati di un evento sono maggiori o uguali a zero e sono minori o uguali ai posti totali
+    \item I posti usati di un evento sono maggiori o uguali a zero e sono minori o uguali ai posti totali % TODO: Non è più un check in tabella. Mettere un trigger???
     \item La data di inizio di un campionato deve essere prima della data di fine
     \item Il budget e i salari devono essere maggiore di 0
     \item L'elisir usato e sprecato e maggiore o uguale a 0
@@ -358,7 +358,7 @@ Ha & Associa una leaderboard ad un campionato & Campionato (1,1), Leaderboard (1
     \item Il GPV nei team si calcola prendendo il giocatore più vecchio del team
     \item L'età media giocatori si calcola facendo la media dell'età dei giocatori del team
     \item Il numero di partite giocate ad un evento è il numero di partite giocate all'evento
-    \item I posti disponibile ad un evento sono i posti totali meno i posti usati
+    \item I posti disponibile ad un evento sono i posti totali meno i biglietti venduti per quell'evento
     \item Il costo medio di elisir di un mazzo si calcola facendo la media del costo di elisir tra le sue carte
 \end{enumerate}
 
@@ -602,7 +602,7 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
         Campionato & Campionato(\underline{ID}, Nome, Luogo, Data inizio, Data fine, Tipo, Montepremi) \\ \hline
         Leaderboard teams & LeaderboardT(\underline{ID}, Campionato)  \\ \hline
         Leaderboard giocatori & LeaderboardG(\underline{ID}, Campionato) \\ \hline
-        Evento & Evento(\underline{ID}, Nome, Luogo, Data, Posti totali, Posti usati, Campionato) \\ \hline
+        Evento & Evento(\underline{ID}, Nome, Luogo, Data, Posti totali, Campionato) \\ \hline
         Biglietto & Biglietto(\underline{ID}, Prezzo, Posto) \\ \hline
         Partita & Partita(\underline{ID}, Vincitore, Orario, Tempo, Evento) \\ \hline
         Mazzo & Mazzo(\underline{ID}) \\ \hline % TODO: Secondo me non ha senso :(
@@ -635,7 +635,7 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
         Campionato(\underline{ID}, Nome, Luogo, Data inizio, Data fine, Tipo, Montepremi) & - \\ \hline
         LeaderboardT(\underline{ID}, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
         LeaderboardG(\underline{ID}, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
-        Evento(\underline{ID}, Nome, Luogo, Data, Posti totali, Posti usati, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
+        Evento(\underline{ID}, Nome, Luogo, Data, Posti totali, Campionato) & Campionato $\xrightarrow{}$ Campionato.ID \\ \hline
         Biglietto(\underline{ID}, Prezzo, Posto) & - \\ \hline
         Partita(\underline{ID}, Vincitore, Orario, Tempo, Evento) & Vincitore $\xrightarrow{}$ Giocatore.ID, Evento $\xrightarrow{}$ Evento.ID \\ \hline
         Mazzo(\underline{ID}) & - \\ \hline % TODO: Secondo me non ha senso :(
@@ -691,9 +691,9 @@ CREATE TABLE IF NOT EXISTS Team(
   logo BYTEA,
   data_fondazione DATE NOT NULL,
   stato_geografico TEXT NOT NULL,
-  gpg INT NOT NULL DEFAULT 0,
-  gpv INT NOT NULL DEFAULT 0,
-  eta_media REAL NOT NULL DEFAULT 0,
+  gpg INT DEFAULT NULL,
+  gpv INT DEFAULT NULL,
+  eta_media REAL DEFAULT NULL,
   FOREIGN KEY (gpg) REFERENCES Giocatore(id),
   FOREIGN KEY (gpv) REFERENCES Giocatore(id)
 );
@@ -711,7 +711,8 @@ CREATE TABLE IF NOT EXISTS Campionato(
   data_fine DATE NOT NULL,
   tipo TEXT NOT NULL,
   montepremi INT NOT NULL,
-  CHECK (tipo = 'team' OR tipo = 'giocatore')
+  CHECK (tipo = 'team' OR tipo = 'giocatore'),
+  CHECK (data_inizio < data_fine)
 );
 
 CREATE TABLE IF NOT EXISTS LeaderboardT(
@@ -732,10 +733,8 @@ CREATE TABLE IF NOT EXISTS Evento(
   luogo TEXT NOT NULL,
   data DATE NOT NULL,
   posti_totali INT NOT NULL,
-  posti_usati INT NOT NULL,
   campionato INT NOT NULL,
-  FOREIGN KEY (campionato) REFERENCES Campionato(id),
-  CHECK (posti_usati >= 0 AND posti_usati <= posti_totali)
+  FOREIGN KEY (campionato) REFERENCES Campionato(id)
 );
 
 CREATE TABLE IF NOT EXISTS Biglietto(
@@ -800,7 +799,7 @@ CREATE TABLE IF NOT EXISTS Sponsorizza(
 CREATE TABLE IF NOT EXISTS Assiste(
   persona INT NOT NULL,
   evento INT NOT NULL,
-  biglietto INT NOT NULL,
+  biglietto INT NOT NULL UNIQUE,
   PRIMARY KEY (persona, evento),
   FOREIGN KEY (persona) REFERENCES Persona(id),
   FOREIGN KEY (evento) REFERENCES Evento(id),
@@ -933,25 +932,25 @@ BEGIN
   SELECT i.giocatore
   INTO giocatore_piu_giovane
   FROM Ingaggio i
-  JOIN Giocatore g ON i.giocatore = g.id
+  JOIN Persona g ON i.giocatore = g.id
   WHERE i.team = NEW.team
-  ORDER BY g.dig DESC
+  ORDER BY g.data_nascita DESC
   LIMIT 1;
 
   -- Il giocatore piu vecchio
   SELECT i.giocatore
   INTO giocatore_piu_vecchio
   FROM Ingaggio i
-  JOIN Giocatore g ON i.giocatore = g.id
+  JOIN Persona g ON i.giocatore = g.id
   WHERE i.team = NEW.team
-  ORDER BY g.dig ASC
+  ORDER BY g.data_nascita ASC
   LIMIT 1;
 
   -- Eta media
-  SELECT AVG(DATE_PART('year', AGE(g.dig)))::REAL
+  SELECT AVG(DATE_PART('year', AGE(g.data_nascita)))::REAL
   INTO eta_media_team
   FROM Ingaggio i
-  JOIN Giocatore g ON i.giocatore = g.id
+  JOIN Persona g ON i.giocatore = g.id
   WHERE i.team = NEW.team;
 
   UPDATE Team
@@ -968,6 +967,34 @@ CREATE TRIGGER trigger_aggiorna_team_stats
 AFTER INSERT OR DELETE OR UPDATE ON Ingaggio
 FOR EACH ROW
 EXECUTE FUNCTION aggiorna_team_stats();
+\end{lstlisting}
+
+Esistono inoltre ulteriori vincoli. Uno di questi è quello in cui per poter aver un numero di volte in cui una carta è stata giocata in una partita maggiore di zero, è necessario che la carta appartenga ad almeno uno due mazzi che sono stati giocati in partita. Per imporlo abbiamo deciso il seguente trigger:
+\begin{lstlisting}[ language=SQL,
+                    deletekeywords={IDENTITY},
+                    deletekeywords={[2]INT},
+                    morekeywords={REFERENCES},
+                    framesep=8pt,
+                    xleftmargin=40pt,
+                    framexleftmargin=40pt,
+                    frame=tb,
+                    framerule=0pt ]
+CREATE OR REPLACE FUNCTION check_used_cards()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT COUNT(carta) FROM Formato WHERE mazzo in (
+      SELECT Gioca.mazzo FROM Gioca WHERE partita = NEW.partita) 
+      AND carta = NEW.carta) = 0 THEN
+  RAISE EXCEPTION 'Una carta non puo essere usata in una partita se non e in un mazzo giocato nella partita';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_check_used_cards
+BEFORE INSERT OR UPDATE ON GiocataIn
+FOR EACH ROW
+EXECUTE FUNCTION check_used_cards();
 \end{lstlisting}
 
 \subsection{Codifica delle operazioni}
@@ -1137,19 +1164,19 @@ INSERT INTO Commenta(persona, partita, lingua) VALUES(...);
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT posizione, team
+SELECT posizione, team as ''team o giocatore''
 FROM FormataT
-JOIN ON Team
-WHERE Team.id = team AND campionato = $1
-ORDER BY posizione
+JOIN Team ON Team.id = team
+WHERE campionato = $1
 
 UNION ALL
 
-SELECT posizione, team
+SELECT FormataG.posizione, FormataG.giocatore
 FROM FormataG
-JOIN ON Giocatore
-WHERE Giocatore.id = giocatore AND campionato = $1
-ORDER BY posizione
+JOIN Giocatore ON Giocatore.id = giocatore
+WHERE campionato = $1
+
+ORDER BY posizione;
 \end{lstlisting}
 
 \subsubsection{Visualizzare la carta più usata in un torneo}
@@ -1162,19 +1189,21 @@ ORDER BY posizione
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT SUM(volte) as sumVolte, carta
+SELECT SUM(volte) AS sumVolte, nome, Carta.elisir, Carta.danni
 FROM GiocataIn
+JOIN Carta ON carta = Carta.id
 WHERE partita IN (
-        SELECT Partita.id
-        FROM Partita
-        WHERE Partita.evento IN (
-            SELECT Evento.id
-            FROM Evento
-            WHERE Evento.campionato = $1
-        )
+    SELECT Partita.id
+    FROM Partita
+    WHERE Partita.evento IN (
+        SELECT Evento.id
+        FROM Evento
+        WHERE Evento.campionato = $1
     )
+)
+GROUP BY Carta.nome, Carta.elisir, Carta.danni
 ORDER BY sumVolte DESC
-LIMIT 1
+LIMIT 1;
 \end{lstlisting}
 
 \subsubsection{Visualizzare la carta più usata in un evento}
@@ -1187,15 +1216,17 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT SUM(volte) as sumVolte, carta
+SELECT SUM(volte) AS sumVolte, nome, Carta.elisir, Carta.danni
 FROM GiocataIn
+JOIN Carta ON carta = Carta.id
 WHERE partita IN (
-        SELECT Partita.id
-        FROM Partita
-        WHERE Partita.evento = $1
-    )
+    SELECT Partita.id
+    FROM Partita
+    WHERE Partita.evento = $1
+)
+GROUP BY Carta.nome, Carta.elisir, Carta.danni
 ORDER BY sumVolte DESC
-LIMIT 1
+LIMIT 1;
 \end{lstlisting}
 
 \subsubsection{Visualizzare la carta più usata in una partita}
@@ -1208,11 +1239,13 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT carta
+SELECT SUM(volte) AS sumVolte, nome, Carta.elisir, Carta.danni
 FROM GiocataIn
+JOIN Carta ON carta = Carta.id
 WHERE partita = $1
-ORDER BY volte DESC
-LIMIT 1
+GROUP BY Carta.nome, Carta.elisir, Carta.danni
+ORDER BY sumVolte DESC
+LIMIT 1;
 \end{lstlisting}
 
 \subsubsection{Visualizzare numero di volte che sono state usate tutte le carte in un torneo}
@@ -1225,15 +1258,16 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT nome, COALESCE(GiocataIn.volte, 0)
+SELECT Carta.nome, SUM(COALESCE(GiocataIn.volte, 0)) as volte
 FROM Carta
-LEFT JOIN GiocataIn
-WHERE id = GiocataIn.carta 
-AND partita IN (
-    SELECT * FROM Partita WHERE Partita.evento IN (
-        SELECT * FROM Evento WHERE Evento.campionato = $1
+LEFT JOIN GiocataIn ON Carta.id = GiocataIn.carta 
+WHERE GiocataIn.partita IN (
+    SELECT Partita.id FROM Partita WHERE Partita.evento IN (
+        SELECT Evento.id FROM Evento WHERE Evento.campionato = $1
     )
 )
+GROUP BY Carta.nome
+ORDER BY volte DESC
 \end{lstlisting}
 
 \subsubsection{Visualizzare numero di volte che sono state usate tutte le carte in un evento}
@@ -1246,13 +1280,14 @@ AND partita IN (
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT nome, COALESCE(GiocataIn.volte, 0)
+SELECT Carta.nome, SUM(COALESCE(GiocataIn.volte, 0)) as volte
 FROM Carta
-LEFT JOIN GiocataIn
-WHERE id = GiocataIn.carta 
-AND partita IN (
-    SELECT * FROM Partita WHERE Partita.evento = $1
+LEFT JOIN GiocataIn ON Carta.id = GiocataIn.carta 
+WHERE GiocataIn.partita IN (
+    SELECT Partita.id FROM Partita WHERE Partita.evento = $1
 )
+GROUP BY Carta.nome
+ORDER BY volte DESC
 \end{lstlisting}
 
 \subsubsection{Visualizzare numero di volte che sono state usate tutte le carte in un partita}
@@ -1265,10 +1300,12 @@ AND partita IN (
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT nome, COALESCE(GiocataIn.volte, 0)
+SELECT Carta.nome, SUM(COALESCE(GiocataIn.volte, 0)) as volte
 FROM Carta
-LEFT JOIN GiocataIn
-WHERE id = GiocataIn.carta AND partita = $1
+LEFT JOIN GiocataIn ON Carta.id = GiocataIn.carta 
+WHERE GiocataIn.partita = $1
+GROUP BY Carta.nome
+ORDER BY volte DESC
 \end{lstlisting}
 
 \subsubsection{Visualizzare quantità di elisir usato, elisir sprecato, danni fatti, danni subiti da un giocatore in un torneo}
@@ -1282,13 +1319,13 @@ WHERE id = GiocataIn.carta AND partita = $1
                     frame=tb,
                     framerule=0pt ]
 -- Assumendo che $1 sia l'ID del giocatore e $2 l'ID del campionato
-SELECT SUM(I.elisir_usato), SUM(I.elisir_sprecato), 
-    SUM(I.danni_fatti), SUM(T.danni_fatti) AS danni_subiti
+SELECT SUM(I.elisir_usato) AS ''Elisir Usato'', SUM(I.elisir_sprecato) AS ''Elisir Sprecato'', 
+    SUM(I.danni_fatti) as ''Danni Fatti'', SUM(T.danni_fatti) AS danni_subiti
 FROM Gioca I, Gioca T
 WHERE I.giocatore = $1 AND I.partita = T.partita
-     AND T.giocatore != $1 ADN I.partita IN (
-        SELECT * FROM Partita WHERE Partita.evento IN (
-            SELECT * FROM Evento WHERE Evento.campinato = $2
+     AND T.giocatore != I.giocatore AND I.partita IN (
+        SELECT id FROM Partita WHERE Partita.evento IN (
+            SELECT id FROM Evento WHERE Evento.campionato = $2
         )
      )
 \end{lstlisting}
@@ -1304,11 +1341,11 @@ WHERE I.giocatore = $1 AND I.partita = T.partita
                     frame=tb,
                     framerule=0pt ]
 -- Assumendo che $1 sia l'ID del giocatore e $2 l'ID dell'evento
-SELECT SUM(I.elisir_usato), SUM(I.elisir_sprecato), 
-    SUM(I.danni_fatti), SUM(T.danni_fatti) AS danni_subiti
+SELECT SUM(I.elisir_usato) AS ''Elisir Usato'', SUM(I.elisir_sprecato) AS ''Elisir Sprecato'', 
+    SUM(I.danni_fatti) as ''Danni Fatti'', SUM(T.danni_fatti) AS danni_subiti
 FROM Gioca I, Gioca T
 WHERE I.giocatore = $1 AND I.partita = T.partita
-     AND T.giocatore != $1 ADN I.partita IN (
+     AND T.giocatore != I.giocatore AND I.partita IN (
         SELECT id FROM Partita WHERE Partita.evento = $2
      )
 \end{lstlisting}
@@ -1324,10 +1361,11 @@ WHERE I.giocatore = $1 AND I.partita = T.partita
                     frame=tb,
                     framerule=0pt ]
 -- Assumendo che $1 sia l'ID del giocatore e $2 l'ID della partita
-SELECT I.elisir_usato, I.elisir_sprecato, I.danni_fatti, T.danni_fatti AS danni_subiti
+SELECT SUM(I.elisir_usato) AS ''Elisir Usato'', SUM(I.elisir_sprecato) AS ''Elisir Sprecato'', 
+    SUM(I.danni_fatti) as ''Danni Fatti'', SUM(T.danni_fatti) AS danni_subiti
 FROM Gioca I, Gioca T
-WHERE I.giocatore = $1 AND I.partita = $2 AND
-    T.partita = $2 AND T.giocatore != $1
+WHERE I.giocatore = $1 AND I.partita = T.partita
+     AND T.giocatore != I.giocatore AND I.partita = $2
 \end{lstlisting}
 
 \subsubsection{Visualizzare il mazzo più usato in un torneo}
@@ -1340,16 +1378,17 @@ WHERE I.giocatore = $1 AND I.partita = $2 AND
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT mazzo, COUNT(mazzo) AS mazzoCount
-FROM Gioca
-WHERE partita IN (
+SELECT COUNT(mazzo) as volte, mazzo
+FROM Gioca 
+JOIN Partita ON Partita.id = partita 
+WHERE Partita IN (
     SELECT id FROM Partita WHERE Partita.evento IN (
         SELECT id FROM Evento WHERE Evento.campionato = $1
     )
-)
-GROUP BY mazzo
-ORDER BY mazzoCount DESC
-LIMIT 1
+) 
+GROUP BY mazzo 
+ORDER BY volte DESC 
+LIMIT 1;
 \end{lstlisting}
 
 \subsubsection{Visualizzare il mazzo più usato in un evento}
@@ -1362,14 +1401,15 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT mazzo, COUNT(mazzo) AS mazzoCount
-FROM Gioca
-WHERE partita IN (
+SELECT COUNT(mazzo) as volte, mazzo
+FROM Gioca 
+JOIN Partita ON Partita.id = partita 
+WHERE Partita IN (
     SELECT id FROM Partita WHERE Partita.evento = $1
-)
-GROUP BY mazzo
-ORDER BY mazzoCount DESC
-LIMIT 1
+) 
+GROUP BY mazzo 
+ORDER BY volte DESC 
+LIMIT 1;
 \end{lstlisting}
 
 \subsubsection{Visualizzare il mazzo più efficace usato in un torneo}
@@ -1382,15 +1422,17 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT COUNT(*) as mazzoVolte
-FROM Gioca
-JOIN Parita ON Gioca.giocatore = Partita.Vincitore
-WHERE Partita.evento IN (
-    SELECT id FROM Evento WHERE Evento.campionato = $1
-)
-GROUP BY mazzo
-ORDER BY mazzoVolte DESC
-LIMIT 1
+SELECT COUNT(mazzo) as volte, mazzo 
+FROM Gioca 
+JOIN Partita ON Partita.id = partita 
+WHERE Partita IN (
+    SELECT id FROM Partita WHERE Partita.evento IN (
+        SELECT id FROM Evento WHERE Evento.campionato = $1
+    )
+) AND Partita.vincitore = giocatore 
+GROUP BY mazzo 
+ORDER BY volte DESC 
+LIMIT 1;
 \end{lstlisting}
 
 \subsubsection{Visualizzare il mazzo più efficace usato in un evento}
@@ -1403,13 +1445,15 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT COUNT(*) as mazzoVolte
-FROM Gioca
-JOIN Parita ON Gioca.giocatore = Partita.Vincitore
-WHERE Partita.evento = $1
-GROUP BY mazzo
-ORDER BY mazzoVolte DESC
-LIMIT 1
+SELECT COUNT(mazzo) as volte, mazzo 
+FROM Gioca 
+JOIN Partita ON Partita.id = partita 
+WHERE Partita IN (
+    SELECT id FROM Partita WHERE Partita.evento = $1
+) AND Partita.vincitore = giocatore 
+GROUP BY mazzo 
+ORDER BY volte DESC 
+LIMIT 1;
 \end{lstlisting}
 
 \subsubsection{Visualizzare il tipo di torri più usato in un torneo}
@@ -1422,10 +1466,12 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT COUNT(*) as countTorri
+SELECT tipo_torri, COUNT(*) as countTorri
 FROM Gioca
-WHERE Partita.evento IN (
-    SELECT id FROM Evento WHERE Evento.campionato = $1
+WHERE Gioca.partita IN (
+    SELECT id FROM Partita WHERE Partita.evento IN (
+        SELECT id FROM Evento WHERE Evento.campionato = $1
+    )
 )
 GROUP BY tipo_torri
 ORDER BY countTorri DESC
@@ -1442,9 +1488,11 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT COUNT(*) as countTorri
+SELECT tipo_torri, COUNT(*) as countTorri
 FROM Gioca
-WHERE Partita.evento = $1
+WHERE Gioca.partita IN (
+    SELECT id FROM Partita WHERE Partita.evento = $1
+)
 GROUP BY tipo_torri
 ORDER BY countTorri DESC
 LIMIT 1
@@ -1460,12 +1508,11 @@ LIMIT 1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT COUNT(*)
+SELECT COUNT(*) AS venduti
 FROM Assiste
 WHERE Assiste.evento IN (
     SELECT id FROM Evento WHERE Evento.campionato = $1
 )
-GROUP BY biglietto
 \end{lstlisting}
 
 \subsubsection{Visualizzare biglietti venduti per un evento}
@@ -1478,10 +1525,9 @@ GROUP BY biglietto
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT COUNT(*)
+SELECT COUNT(*) AS venduti
 FROM Assiste
 WHERE Assiste.evento = $1
-GROUP BY biglietto
 \end{lstlisting}
 
 \subsubsection{Visualizzare il cronista di una partita}
@@ -1510,7 +1556,7 @@ WHERE Commenta.partita = $1
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT nome, logo, data_fondazione, stato_geografico, gpg, gpv, eta_media, Persona.nome as coach, Sponsor.nome as sponsor
+SELECT Team.nome, logo, data_fondazione, stato_geografico, gpg, gpv, eta_media, Persona.nome as coach, Sponsor.nome as sponsor
 FROM Team
 JOIN Allena ON Team.id = Allena.team
 JOIN Persona ON Persona.id = Allena.persona
