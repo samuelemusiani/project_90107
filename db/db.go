@@ -44,7 +44,17 @@ func Init(conf *config.Config, sqlFS embed.FS) (*sql.DB, error) {
 		return nil, errors.Join(err, errors.New("Error creating schema"))
 	}
 
-	triggers, err := sqlFiles.ReadFile("sql/triggers.sql")
+	triggers1, err := sqlFiles.ReadFile("sql/triggers1.sql")
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.Exec(string(triggers1))
+	if err != nil {
+		return nil, errors.Join(err, errors.New("Error creating triggers1"))
+	}
+
+	triggers2, err := sqlFiles.ReadFile("sql/triggers2.sql")
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +64,7 @@ func Init(conf *config.Config, sqlFS embed.FS) (*sql.DB, error) {
 	err = row.Scan(&tgname)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			_, err = db.Exec(string(triggers))
+			_, err = db.Exec(string(triggers2))
 			if err != nil {
 				return nil, errors.Join(err, errors.New("Error creating triggers"))
 			}

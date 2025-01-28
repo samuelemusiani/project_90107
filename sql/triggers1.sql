@@ -9,12 +9,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE TRIGGER trigger_check_max_carte
-BEFORE INSERT ON Formato
-FOR EACH ROW
-EXECUTE FUNCTION check_max_carte();
-
-
 CREATE OR REPLACE FUNCTION check_players_number()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -25,11 +19,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-CREATE TRIGGER trigger_check_players_number
-BEFORE INSERT ON Gioca
-FOR EACH ROW
-EXECUTE FUNCTION check_players_number();
 
 CREATE OR REPLACE FUNCTION aggiorna_team_stats()
 RETURNS TRIGGER AS $$
@@ -42,25 +31,25 @@ BEGIN
   SELECT i.giocatore
   INTO giocatore_piu_giovane
   FROM Ingaggio i
-  JOIN Giocatore g ON i.giocatore = g.id
+  JOIN Persona g ON i.giocatore = g.id
   WHERE i.team = NEW.team
-  ORDER BY g.dig DESC
+  ORDER BY g.data_nascita DESC
   LIMIT 1;
 
   -- Il giocatore piu vecchio
   SELECT i.giocatore
   INTO giocatore_piu_vecchio
   FROM Ingaggio i
-  JOIN Giocatore g ON i.giocatore = g.id
+  JOIN Persona g ON i.giocatore = g.id
   WHERE i.team = NEW.team
-  ORDER BY g.dig ASC
+  ORDER BY g.data_nascita ASC
   LIMIT 1;
 
   -- Eta media
-  SELECT AVG(DATE_PART('year', AGE(g.dig)))::REAL
+  SELECT AVG(DATE_PART('year', AGE(g.data_nascita)))::REAL
   INTO eta_media_team
   FROM Ingaggio i
-  JOIN Giocatore g ON i.giocatore = g.id
+  JOIN Persona g ON i.giocatore = g.id
   WHERE i.team = NEW.team;
 
   UPDATE Team
@@ -72,9 +61,3 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-
-CREATE TRIGGER trigger_aggiorna_team_stats
-AFTER INSERT OR DELETE OR UPDATE ON Ingaggio
-FOR EACH ROW
-EXECUTE FUNCTION aggiorna_team_stats();
