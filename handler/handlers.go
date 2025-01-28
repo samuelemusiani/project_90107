@@ -40,6 +40,8 @@ func InitAndServe(conf *config.Config) error {
 	api.POST("/commenta", insertCommenta)
 	api.PUT("/ingaggio", updateIngaggio)
 	api.GET("/classifica/:id_campionato", viewClassifica)
+	api.GET("/carta_piu_usata/campionato/:id_campionato", viewCartaPiuUsataCampionato)
+	api.GET("/carta_piu_usata/evento/:id_evento", viewCartaPiuUsataEvento)
 	api.GET("/team/:nome", viewTeam)
 	api.GET("/commentatore/:id_partita", viewCommentatore)
 	api.GET("/biglietti/evento/:nome_evento", viewBigliettiEvento)

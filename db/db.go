@@ -356,6 +356,32 @@ func ClassificaCampionato(id string) ([]types.Classifica, error) {
 	return classifica, nil
 }
 
+// L'ID all'interno della carta indica il numero di vole che e' stata usata
+func CartaPiuUsataCampionato(id string) (carta types.Carta, err error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op13.sql")
+	if err != nil {
+		return
+	}
+
+	row := db.QueryRow(string(sqlFiles), id)
+
+	err = row.Scan(&carta.ID, &carta.Nome, &carta.Elisir, &carta.Danni)
+	return
+}
+
+// L'ID all'interno della carta indica il numero di vole che e' stata usata
+func CartaPiuUsataEvento(id string) (carta types.Carta, err error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op14.sql")
+	if err != nil {
+		return
+	}
+
+	row := db.QueryRow(string(sqlFiles), id)
+
+	err = row.Scan(&carta.ID, &carta.Nome, &carta.Elisir, &carta.Danni)
+	return
+}
+
 func UpdateIngaggio(giocatore string, newteam string, salario int64) error {
 
 	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", newteam)

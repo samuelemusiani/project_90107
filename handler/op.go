@@ -649,3 +649,31 @@ func viewClassifica(c *gin.Context) {
 
 	c.JSON(200, cass)
 }
+
+func viewCartaPiuUsataCampionato(c *gin.Context) {
+	idCampionato := c.Param("id_campionato")
+	carta, err := db.CartaPiuUsataCampionato(idCampionato)
+	if err != nil {
+		slog.With("err", err).Error("View carta piu' usata campionato")
+		c.JSON(500, gin.H{
+			"error": "Error view carta piu' usata campionato",
+		})
+		return
+	}
+
+	c.JSON(200, carta)
+}
+
+func viewCartaPiuUsataEvento(c *gin.Context) {
+	idEvento := c.Param("id_evento")
+	carta, err := db.CartaPiuUsataEvento(idEvento)
+	if err != nil {
+		slog.With("err", err).Error("View carta piu' usata evento")
+		c.JSON(500, gin.H{
+			"error": "Error view carta piu' usata evento",
+		})
+		return
+	}
+
+	c.JSON(200, carta)
+}
