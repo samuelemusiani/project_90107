@@ -862,3 +862,22 @@ func viewTipoTorriEvento(c *gin.Context) {
 
 	c.JSON(200, tipo)
 }
+
+func viewBigliettiCampionato(c *gin.Context) {
+	nome := c.Param("nome")
+	t, err := db.ViewBigliettiCampionato(nome)
+	if err != nil {
+		slog.With("err", err).Error("View biglietti")
+		c.JSON(500, gin.H{
+			"error": "Error view biglietti",
+		})
+		return
+	}
+
+	var ret struct {
+		Numero int64 `json:"numero"`
+	}
+	ret.Numero = t
+
+	c.JSON(200, ret)
+}

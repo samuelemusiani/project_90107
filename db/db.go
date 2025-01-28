@@ -693,6 +693,30 @@ func ViewCommentatore(partita string) (*types.Persona, error) {
 	return &commentatore, nil
 }
 
+func ViewBigliettiCampionato(campionato string) (int64, error) {
+	var biglietti int64
+
+	var campionatoID int64
+	row := db.QueryRow("SELECT id FROM campionato WHERE nome = $1", campionato)
+	err := row.Scan(&campionatoID)
+	if err != nil {
+		return 0, errors.New("Campionato not found")
+	}
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op28.sql")
+	if err != nil {
+		return 0, err
+	}
+	row = db.QueryRow(string(sqlFiles), campionatoID)
+
+	err = row.Scan(&biglietti)
+	if err != nil {
+		return 0, err
+	}
+
+	return biglietti, nil
+}
+
 func ViewBigliettiEvento(evento string) (int64, error) {
 	var biglietti int64
 

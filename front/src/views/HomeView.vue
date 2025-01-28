@@ -18,7 +18,7 @@ import OP16_18 from "@/components/CarteUsate.vue";
 import OP19_21 from "@/components/Statistiche.vue";
 import OP22_25 from "@/components/MazzoUsato.vue";
 import OP26_27 from "@/components/TorriUsate.vue";
-import OP29 from "@/components/ViewBigliettiEvento.vue";
+import OP28_29 from "@/components/ViewBiglietti.vue";
 import OP30 from "@/components/ViewCommentatore.vue";
 import OP31 from "@/components/ViewTeam.vue";
 import OP32 from "@/components/UpdateIngaggio.vue";
@@ -84,8 +84,10 @@ const comp = computed(() => {
       return OP26_27;
     case 27:
       return OP26_27;
+    case 28:
+      return OP28_29;
     case 29:
-      return OP29;
+      return OP28_29;
     case 30:
       return OP30;
     case 31:
@@ -118,7 +120,10 @@ onMounted(() => {
     </header>
     <main class="flex flex-col gap-4 w-full max-w-lg">
       <div class="">
-        <select v-model.number="op" class="select select-bordered select-primary w-full">
+        <select
+          v-model.number="op"
+          class="select select-bordered select-primary w-full"
+        >
           <option value="0">Seleziona operazione</option>
           <option value="1">Inserire Giocatore</option>
           <option value="2">Fomare un team</option>
@@ -147,6 +152,9 @@ onMounted(() => {
           <option value="25">Visualizza mazzo più efficace evento</option>
           <option value="26">Visualizza torri più usate campionato</option>
           <option value="27">Visualizza torri più usate evento</option>
+          <option value="28">
+            Visualizza biglietti venduti per un campionato
+          </option>
           <option value="29">Visualizza biglietti venduti per un evento</option>
           <option value="30">Visualizza commentatore di una partita</option>
           <option value="31">Visualizza team</option>

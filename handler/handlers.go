@@ -57,6 +57,7 @@ func InitAndServe(conf *config.Config) error {
 	api.GET("/torri_usate/evento/:id", viewTipoTorriEvento)
 	api.GET("/team/:nome", viewTeam)
 	api.GET("/commentatore/:id_partita", viewCommentatore)
+	api.GET("/biglietti/campionato/:nome", viewBigliettiCampionato)
 	api.GET("/biglietti/evento/:nome_evento", viewBigliettiEvento)
 
 	// Read index.html into memory

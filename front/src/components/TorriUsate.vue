@@ -34,15 +34,12 @@ const type = computed(() => {
 
 async function fetchClassifica() {
   try {
-    const res = await fetch(
-      `/api/torri_usate/${type.value}/${id.value}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const res = await fetch(`/api/torri_usate/${type.value}/${id.value}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+    });
 
     if (!res.ok) {
       $toast.error("Errore durante la fetch per la torri usate");
@@ -56,7 +53,7 @@ async function fetchClassifica() {
   }
 }
 
-onMounted(() => { });
+onMounted(() => {});
 </script>
 
 <template>
@@ -74,14 +71,24 @@ onMounted(() => { });
         <div class="form-control">
           <div class="label">
             <label class="lable-text"> Volte usate </label>
-            <input types="text" v-model="statistica.volte" class="input input-bordered" disabled />
+            <input
+              types="text"
+              v-model="statistica.volte"
+              class="input input-bordered"
+              disabled
+            />
           </div>
         </div>
 
         <div class="form-control">
           <div class="label">
             <label class="lable-text"> Tipo torri </label>
-            <input types="text" v-model="statistica.tipoTorri" class="input input-bordered" disabled />
+            <input
+              types="text"
+              v-model="statistica.tipoTorri"
+              class="input input-bordered"
+              disabled
+            />
           </div>
         </div>
       </form>

@@ -1,19 +1,37 @@
 <script setup lang="ts">
-import { formatDate } from "@/utils";
-import { ref, onMounted } from "vue";
+import { computed } from "@vue/reactivity";
+import { ref, onMounted, defineProps } from "vue";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
+
+const $props = defineProps({
+  op: {
+    type: Number,
+    required: true,
+  },
+});
 
 const $toast = useToast();
 
 const response = ref(false);
-const evento = ref("");
+const nome = ref("");
 
 const numero = ref(0);
 
-async function viewBigliettoiEvento() {
+const type = computed(() => {
+  switch ($props.op) {
+    case 28:
+      return "campionato";
+    case 29:
+      return "evento";
+    default:
+      return "campionato";
+  }
+});
+
+async function viewBiglietti() {
   try {
-    const res = await fetch(`/api//biglietti/evento/${evento.value}`, {
+    const res = await fetch(`/api/biglietti/${type.value}/${nome.value}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -40,23 +58,23 @@ onMounted(() => {});
 <template>
   <div class="greetings w-full">
     <h3 class="font-bold text-xl">
-      Visualizza il numero di bilgietti venduti per un evento
+      Visualizza il numero di bilgietti venduti per un {{ type }}
     </h3>
 
     <form class="flex flex-col w-full gap-2" @click.prevent>
       <div>
         <div class="label">
-          <span class="label-text">Nome evento</span>
+          <span class="label-text">Nome {{ type }}</span>
         </div>
         <input
           type="text"
           placeholder="Nome"
-          v-model="evento"
+          v-model="nome"
           class="input input-bordered w-full"
         />
       </div>
 
-      <button @click="viewBigliettoiEvento" class="btn btn-primary mt-4">
+      <button @click="viewBiglietti" class="btn btn-primary mt-4">
         Visualizza
       </button>
     </form>
