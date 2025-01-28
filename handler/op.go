@@ -433,7 +433,10 @@ func insertCarta(c *gin.Context) {
 }
 
 func insertFormato(c *gin.Context) {
-	var formato types.Formato
+	var formato struct {
+		Mazzo int64  `json:"mazzo"`
+		Carta string `json:"carta"`
+	}
 	if err := c.BindJSON(&formato); err != nil {
 		slog.With("err", err).Error("Binding JSON")
 		c.JSON(400, gin.H{
@@ -441,7 +444,16 @@ func insertFormato(c *gin.Context) {
 		return
 	}
 
-	err := db.InsertFormato(formato.Mazzo, formato.Carta)
+	cartaID, err := db.GetCartaIDByName(formato.Carta)
+	if err != nil {
+		slog.With("err", err).Error("Getting carta ID")
+		c.JSON(500, gin.H{
+			"error": "Error getting carta ID",
+		})
+		return
+	}
+
+	err = db.InsertFormato(formato.Mazzo, cartaID)
 	if err != nil {
 		slog.With("err", err).Error("Inserting formato")
 		c.JSON(500, gin.H{
