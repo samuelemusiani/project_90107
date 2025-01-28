@@ -54,7 +54,7 @@ func insertGiocatore(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Giocatore inserted",
 	})
 }
@@ -77,7 +77,7 @@ func insertTeam(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Team inserted",
 	})
 }
@@ -105,7 +105,7 @@ func ingaggio(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Ingaggio effettuato",
 	})
 }
@@ -164,7 +164,7 @@ func insertCoach(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Ingaggio effettuato",
 	})
 }
@@ -210,7 +210,7 @@ func insertSponsor(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Sponsor inserted",
 	})
 }
@@ -233,7 +233,7 @@ func insertCampionato(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Campionato inserted",
 	})
 }
@@ -279,7 +279,7 @@ func insertEvento(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Evento inserted",
 	})
 }
@@ -388,8 +388,24 @@ func insertPartita(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Partita inserted",
+	})
+}
+
+func insertMazzo(c *gin.Context) {
+	id, err := db.CreateMazzo()
+	if err != nil {
+		slog.With("err", err).Error("Creating mazzo")
+		c.JSON(500, gin.H{
+			"error": "Error creating mazzo",
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"message": "Mazzo created",
+		"id":      id,
 	})
 }
 
@@ -411,7 +427,30 @@ func insertCarta(c *gin.Context) {
 		return
 	}
 
-	c.JSON(204, gin.H{
+	c.JSON(201, gin.H{
 		"message": "Carta inserted",
+	})
+}
+
+func insertFormato(c *gin.Context) {
+	var formato types.Formato
+	if err := c.BindJSON(&formato); err != nil {
+		slog.With("err", err).Error("Binding JSON")
+		c.JSON(400, gin.H{
+			"error": "Invalid JSON"})
+		return
+	}
+
+	err := db.InsertFormato(formato.Mazzo, formato.Carta)
+	if err != nil {
+		slog.With("err", err).Error("Inserting formato")
+		c.JSON(500, gin.H{
+			"error": "Error inserting formato",
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"message": "Formato inserted",
 	})
 }

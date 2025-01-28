@@ -31,6 +31,8 @@ func InitAndServe(conf *config.Config) error {
 	api.POST("/campionato", insertCampionato)
 	api.POST("/evento", insertEvento)
 	api.POST("/partita", insertPartita)
+	api.POST("/mazzo", insertMazzo)
+	api.POST("/formato", insertFormato)
 	api.POST("/carta", insertCarta)
 
 	// Read index.html into memory

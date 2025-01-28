@@ -248,3 +248,33 @@ func InsertCarta(g types.Carta) error {
 	_, err = db.Exec(string(sqlFiles), g.Nome, g.Elisir, g.Danni)
 	return err
 }
+
+func CreateMazzo() (int64, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op08_1.sql")
+	_, err = db.Query(string(sqlFiles) + ";")
+
+	if err != nil {
+		return 0, err
+	}
+
+	row := db.QueryRow("SELECT * FROM mazzo ORDER BY id DESC LIMIT 1")
+	var id int64
+	err = row.Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+
+	slog.With("id", id).Debug("Mazzo created")
+
+	return id, nil
+}
+
+func InsertFormato(mazzo int64, carta int64) error {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op08_2.sql")
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(string(sqlFiles), mazzo, carta)
+	return err
+}

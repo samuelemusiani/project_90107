@@ -87,3 +87,12 @@ type Carta struct {
 	Elisir int64  `json:"elisir"`
 	Danni  int64  `json:"danni"`
 }
+
+type Mazzo struct {
+	ID int64 `json:"id"`
+}
+
+type Formato struct {
+	Mazzo int64 `json:"mazzo"`
+	Carta int64 `json:"carta"`
+}
