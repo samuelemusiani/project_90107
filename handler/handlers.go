@@ -53,6 +53,8 @@ func InitAndServe(conf *config.Config) error {
 	api.GET("/mazzo_piu_usato/evento/:id", viewMazzoPiuUsatoEvento)
 	api.GET("/mazzo_migliore/campionato/:id", viewMazzoMiglioreCampionato)
 	api.GET("/mazzo_migliore/evento/:id", viewMazzoMiglioreEvento)
+	api.GET("/torri_usate/campionato/:id", viewTipoTorriCampionato)
+	api.GET("/torri_usate/evento/:id", viewTipoTorriEvento)
 	api.GET("/team/:nome", viewTeam)
 	api.GET("/commentatore/:id_partita", viewCommentatore)
 	api.GET("/biglietti/evento/:nome_evento", viewBigliettiEvento)

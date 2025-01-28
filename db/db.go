@@ -564,6 +564,32 @@ func MazzoMiglioreEvento(id string) (types.MazzoVolte, error) {
 	return tmp, err
 }
 
+func TipoTorriCampionato(id string) (types.VolteTorri, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op26.sql")
+	if err != nil {
+		return types.VolteTorri{}, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), id)
+
+	var tmp types.VolteTorri
+	err = row.Scan(&tmp.TipoTorri, &tmp.Volte)
+	return tmp, err
+}
+
+func TipoTorriEvento(id string) (types.VolteTorri, error) {
+	sqlFiles, err := sqlFiles.ReadFile("sql/op27.sql")
+	if err != nil {
+		return types.VolteTorri{}, err
+	}
+
+	row := db.QueryRow(string(sqlFiles), id)
+
+	var tmp types.VolteTorri
+	err = row.Scan(&tmp.TipoTorri, &tmp.Volte)
+	return tmp, err
+}
+
 func UpdateIngaggio(giocatore string, newteam string, salario int64) error {
 
 	row := db.QueryRow("SELECT id FROM Team WHERE nome = $1", newteam)

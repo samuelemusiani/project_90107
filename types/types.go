@@ -144,3 +144,8 @@ type MazzoVolte struct {
 	Mazzo int64 `json:"mazzo"`
 	Volte int64 `json:"volte"`
 }
+
+type VolteTorri struct {
+	TipoTorri string `json:"tipoTorri"`
+	Volte     int64  `json:"volte"`
+}

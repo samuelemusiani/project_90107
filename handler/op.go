@@ -834,3 +834,31 @@ func viewMazzoMiglioreEvento(c *gin.Context) {
 
 	c.JSON(200, mazzo)
 }
+
+func viewTipoTorriCampionato(c *gin.Context) {
+	id := c.Param("id")
+	tipo, err := db.TipoTorriCampionato(id)
+	if err != nil {
+		slog.With("err", err).Error("View tipo torri campionato")
+		c.JSON(500, gin.H{
+			"error": "Error view tipo torri campionato",
+		})
+		return
+	}
+
+	c.JSON(200, tipo)
+}
+
+func viewTipoTorriEvento(c *gin.Context) {
+	id := c.Param("id")
+	tipo, err := db.TipoTorriEvento(id)
+	if err != nil {
+		slog.With("err", err).Error("View tipo torri evento")
+		c.JSON(500, gin.H{
+			"error": "Error view tipo torri evento",
+		})
+		return
+	}
+
+	c.JSON(200, tipo)
+}
