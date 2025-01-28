@@ -325,3 +325,17 @@ func viewTeam(c *gin.Context) {
 
 	c.JSON(200, t)
 }
+
+func viewCommentatore(c *gin.Context) {
+	idPartita := c.Param("id_partita")
+	t, err := db.ViewCommentatore(idPartita)
+	if err != nil {
+		slog.With("err", err).Error("View commentatore")
+		c.JSON(500, gin.H{
+			"error": "Error view commentatore",
+		})
+		return
+	}
+
+	c.JSON(200, t)
+}

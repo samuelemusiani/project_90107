@@ -293,3 +293,20 @@ func ViewTeam(team string) (*types.ReturnTeam, error) {
 		Sponsor:         teamstruct.Sponsor,
 	}, nil
 }
+
+func ViewCommentatore(partita string) (*types.Persona, error) {
+	var commentatore types.Persona
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op30.sql")
+	if err != nil {
+		return nil, err
+	}
+	row := db.QueryRow(string(sqlFiles), partita)
+
+	err = row.Scan(&commentatore.Nome, &commentatore.Cognome, &commentatore.DataNascita, &commentatore.LuogoNascita)
+	if err != nil {
+		return nil, err
+	}
+
+	return &commentatore, nil
+}
