@@ -339,3 +339,22 @@ func viewCommentatore(c *gin.Context) {
 
 	c.JSON(200, t)
 }
+
+func viewBigliettiEvento(c *gin.Context) {
+	nomeEvento := c.Param("nome_evento")
+	t, err := db.ViewBigliettiEvento(nomeEvento)
+	if err != nil {
+		slog.With("err", err).Error("View biglietti")
+		c.JSON(500, gin.H{
+			"error": "Error view biglietti",
+		})
+		return
+	}
+
+	var ret struct {
+		Numero int64 `json:"numero"`
+	}
+	ret.Numero = t
+
+	c.JSON(200, ret)
+}

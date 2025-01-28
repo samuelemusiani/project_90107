@@ -5,6 +5,7 @@ import OP03 from "@/components/InsertCoach.vue";
 import OP04 from "@/components/InsertSponsor.vue";
 import OP05 from "@/components/InsertCampionato.vue";
 import OP06 from "@/components/InsertEvento.vue";
+import OP29 from "@/components/ViewBigliettiEvento.vue";
 import OP30 from "@/components/ViewCommentatore.vue";
 import OP31 from "@/components/ViewTeam.vue";
 import OP32 from "@/components/UpdateIngaggio.vue";
@@ -28,6 +29,8 @@ const comp = computed(() => {
       return OP05;
     case 6:
       return OP06;
+    case 29:
+      return OP29;
     case 30:
       return OP30;
     case 31:
@@ -71,6 +74,7 @@ onMounted(() => {
           <option value="4">Inserire Sponsor</option>
           <option value="5">Inserire Campionato</option>
           <option value="6">Inserire Evento</option>
+          <option value="29">Visualizza biglietti venduti per un evento</option>
           <option value="30">Visualizza commentatore di una partita</option>
           <option value="31">Visualizza team</option>
           <option value="32">Aggiorna ingaggio</option>

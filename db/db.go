@@ -310,3 +310,27 @@ func ViewCommentatore(partita string) (*types.Persona, error) {
 
 	return &commentatore, nil
 }
+
+func ViewBigliettiEvento(evento string) (int64, error) {
+	var biglietti int64
+
+	var eventoID int64
+	row := db.QueryRow("SELECT id FROM evento WHERE nome = $1", evento)
+	err := row.Scan(&eventoID)
+	if err != nil {
+		return 0, errors.New("Evento not found")
+	}
+
+	sqlFiles, err := sqlFiles.ReadFile("sql/op29.sql")
+	if err != nil {
+		return 0, err
+	}
+	row = db.QueryRow(string(sqlFiles), eventoID)
+
+	err = row.Scan(&biglietti)
+	if err != nil {
+		return 0, err
+	}
+
+	return biglietti, nil
+}
