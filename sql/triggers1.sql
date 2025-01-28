@@ -19,6 +19,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION check_used_cards()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT COUNT(carta) FROM Formato WHERE mazzo in (
+      SELECT Gioca.mazzo FROM Gioca WHERE partita = NEW.partita) 
+      AND carta = NEW.carta) = 0 THEN
+  RAISE EXCEPTION 'Una carta non può essere usata in una partita se non è in un mazzo';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION aggiorna_team_stats()
 RETURNS TRIGGER AS $$

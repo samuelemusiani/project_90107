@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS Sponsorizza(
 CREATE TABLE IF NOT EXISTS Assiste(
   persona INT NOT NULL,
   evento INT NOT NULL,
-  biglietto INT NOT NULL,
+  biglietto INT NOT NULL UNIQUE,
   PRIMARY KEY (persona, evento),
   FOREIGN KEY (persona) REFERENCES Persona(id),
   FOREIGN KEY (evento) REFERENCES Evento(id),
