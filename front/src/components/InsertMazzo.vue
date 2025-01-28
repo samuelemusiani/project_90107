@@ -29,6 +29,31 @@ async function createMazzo() {
   }
 }
 
+async function insertFormato() {
+  try {
+    const res = await fetch("/api/formato", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        mazzo: id.value,
+        carta: carta.value,
+      }),
+    });
+
+    if (!res.ok) {
+      $toast.error("Errore durante l'inserimento della carta nel mazzo");
+      throw new Error("Failed to insert user");
+    }
+
+    const data = await res.json();
+    id.value = data.id;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 onMounted(() => {});
 </script>
 
@@ -56,7 +81,7 @@ onMounted(() => {});
         />
       </div>
 
-      <button @click="" class="btn btn-primary mt-4">
+      <button @click="insertFormato" class="btn btn-primary mt-4">
         Insert Carta into Mazzo
       </button>
     </form>
