@@ -10,7 +10,7 @@ const $toast = useToast();
 
 const vincitore = ref(false);
 const orario = ref(formatTime(new Date()));
-const tempo = ref(rand(40, 580));
+const tempo = ref(rand(40, 300));
 const evento = ref("");
 const giocatore1 = ref("");
 const giocatore2 = ref("");
