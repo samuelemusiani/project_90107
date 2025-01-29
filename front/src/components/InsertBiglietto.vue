@@ -45,9 +45,9 @@ async function createAssiste() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prezzo: prezzo.value,
-        posto: posto.value,
         persona: persona.value,
+        evento: evento.value,
+        biglietto: id.value,
       }),
     });
 
