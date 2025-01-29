@@ -5,6 +5,8 @@
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{hyperref}
+\usepackage{blindtext}
+\usepackage{titlesec}
 
 \usepackage[a4paper, total={6in, 8in}]{geometry}
 
@@ -62,10 +64,14 @@
 }
 \date{January 2025}
 
+\renewcommand*\contentsname{Indice}
+\setcounter{tocdepth}{2}
 
 \begin{document}
 
 \maketitle
+
+\tableofcontents
 
 \section{Analisi dei requisiti}
 
@@ -113,7 +119,7 @@ Spettatore & Persona che assiste ad un evento & - & Evento \\ \hline
 Cronista & Persona che commenta le partite per gli spettatori & Commentatore & Partita \\ \hline
 Biglietto & Oggetto che permette ad uno spettatore di assistere ad un evento & - & Spettatore, Evento \\ \hline
 Elisir    & Valuta utilizzata durante le partite per piazzare carte & - & Carta \\ \hline
-Torre     & Base dei giocatori, l'obbiettivo del gioco è distruggere quella dell'avversario & 0 & Partita \\ \hline
+Torre     & Base dei giocatori, l'obbiettivo del gioco è distruggere quella dell'avversario & - & Partita \\ \hline
 \end{tabularx}
 \caption{Glossario dei termini 1}
 \label{table_glossario_termini1}
@@ -127,7 +133,7 @@ Torre     & Base dei giocatori, l'obbiettivo del gioco è distruggere quella del
 GPG & Giocatore più giovane & - & Team \\ \hline
 GPV & Giocatore più vecchio & - & Team \\ \hline
 DF & Data in cui è stato fondato un team & Data fondazione  & Team \\ \hline
-DIG & Data in cui il giocatore ha Iniziato a Giocare & & \\ \hline
+DIG & Data in cui il giocatore ha Iniziato a Giocare & - & Team \\ \hline
 \end{tabularx}
 \caption{Glossario dei termini 2}
 \label{table_glossario_termini2}
@@ -1605,6 +1611,6 @@ WHERE giocatore = $1
 \end{lstlisting}
 
 \section{Testing}
-Per testare il database progettato e tutte le operazioni annesse abbiamo implementato un semplice sito in web utilizzando Vue come framework frontend e Go come backend per interfacciarsi a PostgreSQL. Il sito può essere trovare al seguente link: \url{http://130.136.3.143:3000}
+Per testare il database progettato e tutte le operazioni annesse abbiamo implementato un semplice sito in web utilizzando Vue come framework frontend e Go come backend per interfacciarsi a PostgreSQL. Il si trova al seguente link: \url{http://130.136.3.143:3000}
 
 \end{document}
