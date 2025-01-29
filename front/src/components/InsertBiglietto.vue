@@ -47,6 +47,7 @@ async function createAssiste() {
       body: JSON.stringify({
         prezzo: prezzo.value,
         posto: posto.value,
+        persona: persona.value,
       }),
     });
 
