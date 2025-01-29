@@ -4,6 +4,7 @@
 \usepackage{tabularx}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{hyperref}
 
 \usepackage[a4paper, total={6in, 8in}]{geometry}
 
@@ -50,6 +51,15 @@
 
 \title{\textbf{Gestione torneo di Clash Royale}}
 \author{Fabio Murer, Samuele Musiani}
+\author{
+  Samuele Musiani \\
+  1069143 \\
+  \texttt{samuele.musiani@studio.unibo.it}
+  \and
+  Fabio Murer\\
+  1069131\\
+  \texttt{fabio.murer@studio.unibo.it}
+}
 \date{January 2025}
 
 
@@ -63,81 +73,90 @@
 % TODO: Al momento è il copia e in colla della mail. Va aggiustanto in base alle modifiche che abbiamo fatto e sembra che dal loro esempio sia più specifico in alcuni punti, quindi si può allungare un po'
 Si vuole realizzare una base di dati per dei campionati e-sport di Clash Royale, di cui si desidera rappresentare i dati relativi ai giocatori, ai team, ai campionati, agli eventi e alle partite.
 
-Per quel che concerne i giocatori, identificati da un username, si vuole rappresentare il nome, il cognome, la data di nascita, il luogo di nascita, la data in cui hanno iniziato a giocare, il team attuale, i team passati, le partite giocate, i campionati giocati e il ranking.
+Per quel che concerne i giocatori si vuole rappresentare il nome, il cognome, l'username, la data di nascita, il luogo di nascita, la data in cui hanno iniziato a giocare, il team di cui fanno parte (se fanno parte di un team), le partite giocate e i campionati giocati.
 
-Dei team si vuole conoscere il nome, i giocatori che ne fanno parte, il coach, gli sponsor, gli organizzatori, la data di fondazione, il logo, il nome e lo stato geografico del team, il giocatore più giovane, il giocatore più vecchio, l'età media dei giocatori, il ranking, la media del ranking dei giocatori e i campionati giocati.
+Dei team si vuole conoscere il nome, i giocatori che ne fanno parte, il coach, gli sponsor, la data di fondazione, il logo, il nome e lo stato geografico del team, il giocatore più giovane, il giocatore più vecchio, l'età media dei giocatori e i campionati giocati.
 
 Relativamente ai campionati, si vogliono rappresentare il nome, la data e gli orari, il luogo, il tipo, la leader-board, i partecipanti, gli eventi e il montepremi.
 
-Per gli eventi si desidera memorizzare il nome, la data e gli orari, il luogo, il montepremi, i partecipanti, le partite giocate e il campionato dell'evento.
+Per gli eventi si desidera memorizzare il nome, la data e gli orari, il luogo, i partecipanti, le partite giocate e il campionato dell'evento.
 
-Per ogni partita si vuole rappresentare i giocatori, il tipo di partita, la data e l'orario, il logo, il vincitore, i mazzi usati, le carte usate, il tempo, il tipo di vittoria, il commentatore, l'evento a cui appartiene, i posti disponibili, il biglietto e i posti acquistati.
+Per ogni partita si vuole rappresentare i giocatori, il tipo di partita, l'orario, il logo, il vincitore, i mazzi usati, le carte usate, il tempo, il commentatore, l'evento a cui appartiene, i posti disponibili, il biglietto e i posti acquistati.
 
-Occorre memorizzare le statistiche generali per torneo, evento, partita e giocatore, tra cui la carta più usata, quante volte è stata usata una carta, l'elisir usato, l'elisir sprecato, i danni fatti, i danni subiti, il mazzo più usato, l'elisir del mazzo più usato e il tipo di torri più usato. 
+Occorre memorizzare le statistiche generali per torneo, evento, partita e giocatore, tra cui la carta più usata, quante volte è stata usata una carta, l'elisir usato, l'elisir sprecato, i danni fatti, i danni subiti, il mazzo più usato, e il tipo di torri più usato. 
 
 \subsection{Glossario dei termini}
 
 % TODO: Finire tabella e controllare che ci siano tutti i termini
 
-Fare riferimento alla tabella \ref{table_glossario_termini}
+Fare riferimento alle tabelle \ref{table_glossario_termini1} e \ref{table_glossario_termini2}
 
-\begin{table}
+\begin{table}[H]
 \centering
-
 \begin{tabularx}{\textwidth}{|l|X|l|X|}
 \hline
 \textbf{Termine}   & \textbf{Descrizione} & \textbf{Sinonimi} & \textbf{Collegamenti} \\ \hline
 Giocatore & Persona che gioca a Clash Royale & - & Team, Mazzo, Partita, Leaderboard Giocatori \\ \hline
 Team      & Gruppo di giocatori pagati per competere in campionati & - & Giocatore, Leaderboard Teams \\ \hline
 Coach      & Componente di un Team che si occupa dell'allenamento & Allenatore & Team \\ \hline
-Mazzo   & Insieme di 8 carte usato da un giocatore in una o più partite & - & Carta, Partita \\ \hline
+Mazzo   & Insieme di 8 carte usato da un giocatore in una o più partite & - & Carta, Partita \\
+\hline
 Carta   & Oggetto su cui si basa il gioco, utilizzate in partita, organizzate in mazzi & - & Partita \\ \hline
 Partita   & Partita tra due giocatori & - & Evento \\ \hline
 Evento   & Insieme di partite in un dato luogo & - & Campionato \\ \hline
-Iscrizioni campionato   & Iscrizione di un team o di un giocatore ad un campionato & - & Team, Campionato \\ \hline
 Campionato   & Insieme di eventi & Torneo & Leaderboard Teams, Leaderboard Giocatori \\ \hline
 Leaderboard Teams   & Classifica dei teams di un campionato & Classifica Team & Team \\ \hline
 Leaderboard Giocatori & Classifica dei giocatori di un campionato & Classifica Giocatori & Giocatori \\ \hline
-Sponsor & Sponsor che sponsorizza uno o più team & & Team \\ \hline
-Sponsorizzazione & Budget che lo sponsor fornisce al team & & Team \\ \hline
-Spettatore & Persona che assiste ad un evento & & Evento \\ \hline
+Sponsor & Sponsor che sponsorizza uno o più team & - & Team \\ \hline
+Sponsorizzazione & Budget che lo sponsor fornisce al team & - & Team \\ \hline
+Spettatore & Persona che assiste ad un evento & - & Evento \\ \hline
 Cronista & Persona che commenta le partite per gli spettatori & Commentatore & Partita \\ \hline
-Biglietto & Oggetto che permette ad uno spettatore di assistere ad un evento & & Spettatore, Evento \\ \hline
-Elisir    & Valuta utilizzata durante le partite per piazzare carte & & Carta \\ \hline
-Torre     & Base dei giocatori, l'obbiettivo del gioco è distruggere quella dell'avversario & & Partita \\ \hline
-Ranking   & Numero di partite vinte se è riferito al giocatore, somma delle partite vinte dei giocatori del team se è riferito al team & & Parta, Giocatore, Team \\ \hline
-GPG & Giocatore più giovane & & Team \\ \hline
-GPV & Giocatore più vecchio & & Team \\ \hline
-DF & Data fundazione & & Team \\ \hline
+Biglietto & Oggetto che permette ad uno spettatore di assistere ad un evento & - & Spettatore, Evento \\ \hline
+Elisir    & Valuta utilizzata durante le partite per piazzare carte & - & Carta \\ \hline
+Torre     & Base dei giocatori, l'obbiettivo del gioco è distruggere quella dell'avversario & 0 & Partita \\ \hline
+\end{tabularx}
+\caption{Glossario dei termini 1}
+\label{table_glossario_termini1}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{|l|X|l|X|}
+\hline
+\textbf{Termine}   & \textbf{Descrizione} & \textbf{Sinonimi} & \textbf{Collegamenti} \\ \hline
+GPG & Giocatore più giovane & - & Team \\ \hline
+GPV & Giocatore più vecchio & - & Team \\ \hline
+DF & Data in cui è stato fondato un team & Data fondazione  & Team \\ \hline
 DIG & Data in cui il giocatore ha Iniziato a Giocare & & \\ \hline
 \end{tabularx}
-\caption{Glossario dei termini}
-\label{table_glossario_termini}
+\caption{Glossario dei termini 2}
+\label{table_glossario_termini2}
 \end{table}
 
 
 \subsection{Eliminazione delle ambiguità}
 
-I campionati possono essere per team, in cui tutti i giocatori del team collaborano per il punteggio, o per giocatore dove ogni giocatore ha il suo punteggio. i campionati per team avranno una classifica per team e i campionati per giocatore avranno una classifica giocatori.
+I campionati possono essere per team, in cui tutti i giocatori del team collaborano per il punteggio, o per giocatore dove ogni giocatore ha il suo punteggio. I campionati per team avranno una classifica per team e i campionati per giocatore avranno una classifica giocatori.
 
 \subsection{Struttura dei requisiti}
 
 \subsubsection{Frasi di carattere generale}
 
-Si vuole realizzare una base di dati per una società che si occupa di organizzare campionati di Clash Royale, di cui si desidera rappresentare i dati relativi alle partite, gli eventi, classifiche e statistiche per giocatori e per teams, la vendita di biglietti dei vari eventi.
+Si vuole realizzare una base di dati per una società che si occupa di organizzare campionati di Clash Royale, di cui si desidera rappresentare i dati relativi alle partite, gli eventi, classifiche e statistiche per giocatori e per teams e la vendita di biglietti dei vari eventi.
 
 \subsubsection{Frasi relative alle Persone}
 
-Per quanto riguarda le Persone si vuole conoscere il nome, il cognome, la data di nascita:
+Per quanto riguarda le Persone si vuole conoscere il nome, il cognome, la data di nascita e il luogo di nascita. Le persone hanno ruoli più specifici
 \begin{itemize}
-    \item persona Allenatore(team che l'ha ingaggiato, salario)
-    \item persona Spettatore(a che eventi ha assistito)
-    \item persona Giocatore(Data in cui ha iniziato a giocare, username, ranking, partite giocate)
+    \item Se si tratta di un allenatore si vuole conoscere il team che l'ha ingaggiato e il salario
+    \item Se si tratta di uno Spettatore si vuole conoscere a che eventi ha assistito e che biglietti ha comprato
+    \item Se si tratta di un giocatore si vuole conoscere la data in cui ha iniziato a giocare, l'username, le partite giocate e le sue statistiche.
+    \item Per quanto riguarda il cronista si vogliono conoscere le partite commentate e con che lingua vengono commentate.
 \end{itemize}
 
 \subsubsection{Frasi relative ai Teams}
 
-Per ogni team si vuole salvare il nome, logo, stato geografico dove risiede, data di fondazione, giocatore più giovane, giocatore più vecchio e in che campionati gioca.
+Per ogni team si vuole salvare il nome, logo, stato geografico dove risiede, data di fondazione, giocatore più giovane, giocatore più vecchio, l'età media dei suoi giocatori e in che campionati gioca.
 
 \subsubsection{Frasi relative ai Mazzi}
 
@@ -153,7 +172,7 @@ Delle partite si vuole conoscere il vincitore, tipo di vittoria, durata della pa
 
 \subsubsection{Frasi relative agli Eventi}
 
-Per ogni evento si vuole salvare il nome, la data, il luogo dove si svolge, il montepremi, numero di posti totali, occupati, liberi per assistere all'evento, partite effettuate in quel evento, numero di partite totali.
+Per ogni evento si vuole salvare il nome, la data, il luogo dove si svolge, numero di posti totali, occupati, liberi per assistere all'evento, partite effettuate in quel evento, numero di partite totali.
 
 \subsubsection{Frasi relative ai Biglietti}
 
@@ -165,7 +184,7 @@ Per quanto concerne i campionati si vuole rappresentare il nome, luogo, periodo 
 
 \subsubsection{Frasi relative alle Leaderboards}
 
-Relativamente alle leaderboards si vuole rappresentare la lista di giocatori o la lista di teams associata alla relativa posizione a secondo della tipologia
+Relativamente alle leaderboards si vuole rappresentare la lista di giocatori o la lista di teams associata alla relativa posizione a secondo della tipologia.
 
 \subsection{Specifica operazioni}
 
@@ -211,11 +230,11 @@ Per la progettazione concettuale è stata adottata una strategia mista, come des
 
 \subsection{Identificazione delle entità e relazioni (bottom-up)}
 
-Sono state identificate (seguendo la strategia bottom-up) inizialmente le seguenti entità: giocate, allenatore, team, sponsor, cronista, carta, mazzo, partita, campionato, evento, biglietto, spettatore e vari tipi di leaderboard.
+Sono state identificate (seguendo la strategia bottom-up) inizialmente le seguenti entità: giocatore, allenatore, team, sponsor, cronista, carta, mazzo, partita, campionato, evento, biglietto, spettatore e vari tipi di leaderboard.
 
 Le entità sopra elencate si possono suddividere in 6 gruppi principali:
 \begin{enumerate}
-    \item \textbf{Giocatore e team}: Include tutte le entità che partecipano al gico
+    \item \textbf{Giocatore e team}: Include tutte le entità che partecipano al gioco
     \item \textbf{Gioco}: Include campionato, evento e partita
     \item \textbf{Carte e mazzi}: Include carte e mazzi
     \item \textbf{Biglietti e spettatori}: Include biglietti, spettatori e cronista
@@ -225,53 +244,58 @@ Le entità sopra elencate si possono suddividere in 6 gruppi principali:
 
 \subsection{Primo scheletro dello schema (top-down)}
 
-Ad un primo livello di astrazione, tenendo conto del raggruppamento fatto nel paragrafo sopra, è stato elaborato il seguente primo scheletro di schema concettuale:
-% SCHEMA 
+Ad un primo livello di astrazione, tenendo conto del raggruppamento fatto nel paragrafo sopra, è stato elaborato il seguente primo scheletro di schema concettuale (figura \ref{fig_primo_scheletro_ER}).
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{resources/top-down.drawio.png}
-    \caption{Primo sceheltro di schema E.R.}
+    \caption{Primo scheletro di schema E.R.}
+    \label{fig_primo_scheletro_ER}
 \end{figure}
 
 \subsection{Sviluppo delle componenti dello scheletro (inside-out)}
 
 \subsubsection{Giocatori, teams, allenatori cronisti, spettatori e sponsor}
 
-Giocatori, Allenatori, Spettatori e Cronisti hanno tutti degli attributi di base in comune, è stato quindi opportunamente deciso di creare un entità padre Persona con i suddetti attributi. Il team è composto da almeno un giocatore ma possono esistere giocatori anche senza team, inoltre il team deve avere un allenatore. Gli sponsor possono sponsorizzare tanti team e i team possono essere sponsorizzati da tanti sponsor diversi. Gli spettatori possono assistere a un evento avendo un biglietto, lo spettatore può assistere a tanti eventi. Per quanto riguarda il Cronista può commentare tante partite ma una partita deve essere commentata da almeno un commentatore.
+Giocatori, Allenatori, Spettatori e Cronisti hanno tutti degli attributi di base in comune, è stato quindi opportunamente deciso di creare un entità padre Persona con i suddetti attributi. Il team è composto da almeno un giocatore ma possono esistere giocatori anche senza team, inoltre il team deve avere un allenatore. Gli sponsor possono sponsorizzare tanti team e i team possono essere sponsorizzati da tanti sponsor diversi. Gli spettatori possono assistere a un evento avendo un biglietto, lo spettatore può assistere a tanti eventi. Per quanto riguarda il Cronista può commentare tante partite ma una partita deve essere commentata da almeno un cronista. Fare riferimento alla figura \ref{fig_secondo_scheletro_ER}.
 
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{resources/giocatori-teams.drawio.png}
     \caption{Schema E.R Giocatori, teams, allenatori cronisti, spettatori e sponsor}
+    \label{fig_secondo_scheletro_ER}
 \end{figure}
 
 \subsubsection{Campionato, evento, partita, classifiche}
 
-Un campionato è formato da almeno un evento, un evento deve appartenere ad un campionato, inoltre l'evento è composto da numerose partite (almeno una), ogni partita deve appartenere ad un evento. I campionati inoltre hanno una leaderboard che può essere di teams o giocatori, la leaderboard di teams è formata da tanti teams, la leaderboard giocatori è formata da tanti giocatori.
+Un campionato è formato da almeno un evento, un evento deve appartenere ad un campionato, inoltre l'evento è composto da numerose partite (almeno una), ogni partita deve appartenere ad un evento. I campionati inoltre hanno una leaderboard che può essere di teams o giocatori, la leaderboard di teams è formata da tanti teams, la leaderboard giocatori è formata da tanti giocatori. Fare riferimento alla figura \ref{fig_terzo_scheletro_ER}.
 
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{resources/eventi.drawio.png}
     \caption{Schema E.R Campionato, evento, partita, classifiche}
+    \label{fig_terzo_scheletro_ER}
 \end{figure}
 
 \subsubsection{Carte e Mazzi}
 
-Il mazzo è formato da molte carte (precisamente 8), una carta però può anche non fare parte di nessun mazzo nel caso che i giocatori non scelgano di utilizzarla o può trovarsi in più mazzi diversi se i giocatori la usano spesso.
+Il mazzo è formato da molte carte (precisamente 8), una carta però può anche non fare parte di nessun mazzo nel caso che i giocatori non scelgano di utilizzarla o può trovarsi in più mazzi diversi se i giocatori la usano spesso. Figura \ref{fig_quarto_scheletro_ER}.
 
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{resources/carta-mazzo.drawio.png}
     \caption{Schema E.R Carte e Mazzi}
+    \label{fig_quarto_scheletro_ER}
 \end{figure}
 
 \subsection{Unione delle componenti nello schema finale}
+Una volta uniti tutti gli schemi E.R. ci si trova davanti alla figura \ref{fig_full_ER}.
 
 \begin{figure}
     \centering
     \includegraphics[scale=0.5]{resources/all.drawio.png}
     \caption{Schema E.R finale con tutti i componenti}
+    \label{fig_full_ER}
 \end{figure}
 
 \subsection{Dizionario dei dati}
@@ -289,11 +313,11 @@ Coach & Allenatore di un team & " & " \\ \hline
 Spettatore & Persona che paga per guardare un evento & " & " \\ \hline
 Cronista & Commentatore di una partita & " & " \\ \hline
 Giocatore & Persona che gioca a Clash Royale & Nome (stringa), Cognome (stringa), Data di nascita (data), Luogo di nascita (stringa), username (stringa), DIG (stringa) & ID (numerico) \\ \hline
-Team & Insieme di giocatori & DF (data), Logo (immagine), Nome (stringa) Stato geografico (stringa) & " \\ \hline
+Team & Insieme di giocatori & DF (data), Logo (immagine), Nome (stringa), Stato geografico (stringa) & " \\ \hline
 Biglietto & Biglietto per assistere ad un evento & Prezzo (string), Posto (numerico) & " \\ \hline
 Campionato & Insieme di eventi & Nome (stringa), Luogo (stringa), Data inizio (data), Data fine (data), Tipo (stringa), Montepremi (numerico) & " \\ \hline
 Evento & Insieme di partite & Nome (stringa), Luogo (stringa), Data (stringa), Posti totali (stringa)& " \\ \hline
-Partita & Partita tra due giocatori & Tempo (numerico), Tipo di vittoria (stringa), Vincitore (numerico), Orario (data) & " \\ \hline
+Partita & Partita tra due giocatori & Tempo (numerico), Vincitore (numerico), Orario (data) & " \\ \hline
 Mazzo & Insieme di carte usate da un giocatore in una partita & - & " \\ \hline
 Carta & Carta singola che si può utilizzare per formare un mazzo & Nome (stringa), Elisir (numerico), Danno (numerico) & " \\ \hline
 Leaderboard & Classifica dei team/giocatori & - & " \\ \hline
@@ -314,7 +338,7 @@ Fare rifermento alla tabella \ref{table_relazioni_dizionario}
 \begin{tabularx}{\textwidth}{|l|X|X|X|}
 \hline
 \textbf{Nome entità}   & \textbf{Descrizione} & \textbf{Entità coinvolte} & \textbf{Attributi} \\ \hline
-Gioca & Associa un giocatore ad un partita ed un mazzo & Giocatore (0,N), Mazzo (1,1) & Elisir usato (numerico), Elisir sprecato (numerico), Danni fatti (numerico), Tipo di torri (????) \\ \hline
+Gioca & Associa un giocatore ad un partita ed un mazzo & Giocatore (0,N), Mazzo (1,1), Partita(1, N) & Elisir usato (numerico), Elisir sprecato (numerico), Danni fatti (numerico), Tipo di torri (stringa) \\ \hline
 Giocata in & Associa una carta giocata ad una partita & Carta (0, N), Partita (0, N) & Volte (numerico) \\ \hline
 Formato & Associa il mazzo alle carte di cui è formato & Mazzo (1,N), Carta (0, N) & - \\ \hline
 Formato & Associa un evento alle partite di cui è formato & Partita (1,1), Evento (1,N) & - \\ \hline
@@ -458,7 +482,7 @@ Fare riferimento alla tabella \ref{table_operazioni}
 \subsubsection{Eliminazione delle ridondanze}
 Abbiamo rilevato un ridondanza sugli attributi (GPG, GPV e Età media giocatori) sull'entità team. Dobbiamo valutare se salvare questi valori e creare una ridondanza oppure calcolarli tutte le volte che sono necessari. GPG (Giocatore più giovane) è calcolato prendendo il giocatore con l'età inferiore che appartiene al team. GPV (Giocatore più vecchio) è calcolato nello stesso modo prendendo però il giocatore con età maggiore. Età media giocatori è calcolato facendo una media dell'età dei componenti del team. Le operazioni che coinvolgono questi attributi sono la n.31 e la n.32 \\
 
-\begin{table}
+\begin{table}[H]
     \centering
     \begin{tabularx}{\textwidth}{|X|X|X|X|}
         \hline 
@@ -472,7 +496,7 @@ Abbiamo rilevato un ridondanza sugli attributi (GPG, GPV e Età media giocatori)
 \end{table}
 
 
-\begin{table}
+\begin{table}[H]
     \centering
     \begin{tabularx}{\textwidth}{|X|X|X|X|}
         \hline
@@ -488,7 +512,7 @@ Abbiamo rilevato un ridondanza sugli attributi (GPG, GPV e Età media giocatori)
     \caption{Tavole degli accessi in presenza di ridondanza op. 32}
 \end{table}
 
-\begin{table}
+\begin{table}[H]
     \centering
     \begin{tabularx}{\textwidth}{|X|X|X|X|}
         \hline 
@@ -546,14 +570,12 @@ Fare riferimento alla figura \ref{fig_eliminazione_gerarchie}
 
 \subsubsection{Accorpamenti e partizionamenti}
 
-% TODO: Riguardare (forse l'evento si può dividere in modo da escludere i posti disponibile/comprati dalle query classiche)
 Non abbiamo trovato nessun possibile accorpamento o partizionamento all'interno nei nostri schemi E.R.
 
 \subsubsection{Eliminazione degli attributi multivalore}
-% TODO: Secondo noi non ce ne sono, ma bisognerebbe controllare meglio
+Non abbiamo riscontrato la presenza di attributi multivalore all'interno dei nostri chemi E.R.
 
 \subsubsection{Elenco degli identificatori principali}
-
 
 \begin{table}[H]
     \centering
@@ -597,7 +619,7 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
         \textbf{Entità - Relazione} & \textbf{Traduzione} \\ \hline
         Persona & Persona(\underline{ID}, Nome, Cognome, Data di nascita, Luogo di nascita) \\ \hline
         Giocatore & Giocatore(\underline{Persona}, Username, DIG) \\ \hline
-        Team & Team(\underline{ID}, Nome, Logo, DF, Stato geografico, GPG, GPV, Età media giocatori) \\ \hline
+        Team & Team(\underline{ID}, Nome, Logo, Data fondazione, Stato geografico, GPG, GPV, Età media giocatori) \\ \hline
         Sponsor & Sponsor(\underline{ID}, Nome) \\ \hline
         Campionato & Campionato(\underline{ID}, Nome, Luogo, Data inizio, Data fine, Tipo, Montepremi) \\ \hline
         Leaderboard teams & LeaderboardT(\underline{ID}, Campionato)  \\ \hline
@@ -606,7 +628,7 @@ Fare riferimento alla tabella \ref{table_entita_relazione_traduzione} e alla tab
         Biglietto & Biglietto(\underline{ID}, Prezzo, Posto) \\ \hline
         Partita & Partita(\underline{ID}, Vincitore, Orario, Tempo, Evento) \\ \hline
         Mazzo & Mazzo(\underline{ID}) \\ \hline % TODO: Secondo me non ha senso :(
-        Carta & Carta(\underline{ID}, Nome, Elisir, Danno) \\ \hline
+        Carta & Carta(\underline{ID}, Nome, Elisir, Danni) \\ \hline
         Ingaggio & Ingaggio(\underline{Team}, \underline{Giocatore}, Salario) \\ \hline
         Allena & Allena(\underline{Persona}, \underline{Team}, Salario) \\ \hline
         Sponsorizza & Sponsorizza(\underline{Sponsor}, \underline{Team}, Budget) \\ \hline
@@ -969,7 +991,7 @@ FOR EACH ROW
 EXECUTE FUNCTION aggiorna_team_stats();
 \end{lstlisting}
 
-Esistono inoltre ulteriori vincoli. Uno di questi è quello in cui per poter aver un numero di volte in cui una carta è stata giocata in una partita maggiore di zero, è necessario che la carta appartenga ad almeno uno due mazzi che sono stati giocati in partita. Per imporlo abbiamo deciso il seguente trigger:
+Esistono inoltre ulteriori vincoli. Uno di questi è quello in cui per poter aver un numero di volte in cui una carta è stata giocata in una partita maggiore di zero, è necessario che la carta appartenga ad almeno uno due mazzi che sono stati giocati in partita. Per imporlo abbiamo implementao il seguente trigger:
 \begin{lstlisting}[ language=SQL,
                     deletekeywords={IDENTITY},
                     deletekeywords={[2]INT},
@@ -1024,9 +1046,9 @@ INSERT INTO Giocatore(id, username, dig) VALUES(...);
                     frame=tb,
                     framerule=0pt ]
 -- gpg, gpv ed eta_media sono di default a zero
-INSERT INTO Team(nome, logo, data_fonazione, stato_geografico) VALUES(...);
+INSERT INTO Team (nome, logo, data_fondazione, stato_geografico) VALUES(...)
 -- per ogni giocatore nel team
-INSERT INTO Ingaggio(team, giocatore, salario) VALUES(...);
+INSERT INTO Ingaggio (team, giocatore, salario) VALUES (...);
 -- gpg, gpv ed eta_media nel team vengono calcolati in automatico dal trigger
 \end{lstlisting}
 
@@ -1040,7 +1062,7 @@ INSERT INTO Ingaggio(team, giocatore, salario) VALUES(...);
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-INSERT INTO Allena(persona, team, salario) VALUES(...);
+INSERT INTO Allena(persona, team, salario) VALUES(...)
 \end{lstlisting}
 
 \subsubsection{Inserire un nuovo sponsor}
@@ -1053,8 +1075,8 @@ INSERT INTO Allena(persona, team, salario) VALUES(...);
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-INSERT INTO Sponsor(nome) VALUES(...);
-INSERT INTO Sponsorizza(sponsor, team, budget) VALUES(...);
+INSERT INTO Sponsor(nome) VALUES(...)
+INSERT INTO Sponsorizza(sponsor, team, budget) VALUES(...)
 \end{lstlisting}
 
 \subsubsection{Inserire un nuovo campionato}
@@ -1067,7 +1089,7 @@ INSERT INTO Sponsorizza(sponsor, team, budget) VALUES(...);
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-INSERT INTO Campionato(nome, luogo, data_inizio, data_fine, tipo, montepremi) VALUES(...);
+INSERT INTO Campionato(nome, luogo, data_inizio, data_fine, tipo, montepremi) VALUES(...)
 \end{lstlisting}
 
 \subsubsection{Inserire un nuovo evento}
@@ -1080,7 +1102,7 @@ INSERT INTO Campionato(nome, luogo, data_inizio, data_fine, tipo, montepremi) VA
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-INSERT INTO Evento(nome, luogo, data, posti_totali, posti_usati, campionato) VALUES(...);
+INSERT INTO Evento(nome, luogo, data, posti_totali, campionato) VALUES(...)
 \end{lstlisting}
 
 \subsubsection{Inserire una nuova partita}
@@ -1093,9 +1115,9 @@ INSERT INTO Evento(nome, luogo, data, posti_totali, posti_usati, campionato) VAL
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-INSERT INTO Partita(vincitore, orario, tempo, evento);
+INSERT INTO Partita(vincitore, orario, tempo, evento) VALUES(...)
 -- Per entrambi i giocatori
-INSET INTO Gioca(giocatore, partita, mazzo, elisir_usato, elisir_sprecato, danni_fatti, tipo_torri) VALUES(...);
+INSERT INTO Gioca(giocatore, partita, mazzo, elisir_usato, elisir_sprecato, danni_fatti, tipo_torri) VALUES(...)
 \end{lstlisting}
 
 \subsubsection{Inserire un nuovo mazzo}
@@ -1136,7 +1158,7 @@ INSERT INTO Carta(nome, elisir, danni) VALUES(...);
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-INSERT INTO Biglietto(prezzo,posto);
+INSERT INTO Biglietto(prezzo, posto);
 INSERT INTO Assiste(persona, evento, biglietto) VALUES(...)
 \end{lstlisting}
 
@@ -1525,9 +1547,10 @@ WHERE Assiste.evento IN (
                     framexleftmargin=40pt,
                     frame=tb,
                     framerule=0pt ]
-SELECT COUNT(*) AS venduti
+SELECT COUNT(*) as venduti
 FROM Assiste
 WHERE Assiste.evento = $1
+GROUP BY biglietto
 \end{lstlisting}
 
 \subsubsection{Visualizzare il cronista di una partita}
@@ -1582,5 +1605,6 @@ WHERE giocatore = $1
 \end{lstlisting}
 
 \section{Testing}
+Per testare il database progettato e tutte le operazioni annesse abbiamo implementato un semplice sito in web utilizzando Vue come framework frontend e Go come backend per interfacciarsi a PostgreSQL. Il sito può essere trovare al seguente link: \url{http://130.136.3.143:3000}
 
 \end{document}
